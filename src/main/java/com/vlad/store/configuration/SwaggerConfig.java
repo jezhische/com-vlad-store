@@ -54,7 +54,7 @@ public class SwaggerConfig {
                 "Store",
                 "Simple server for web store",
                 "0.0.1-SNAPSHOT",
-                "Terms of service",
+                "Terms of com.vlad.store.service",
                 new Contact("Vlad Nesterenko", "https://github.com/jezhische/store", "jezhische@gmail.com"),
                 "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", Collections.emptyList());
     }

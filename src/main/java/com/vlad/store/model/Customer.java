@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "customer",
+@Table(name = "customers",
 uniqueConstraints = @UniqueConstraint(columnNames = "login"))
 public class Customer {
 
@@ -42,10 +42,12 @@ public class Customer {
             CascadeType.MERGE
     }, fetch = FetchType.LAZY) // LAZY by default
     @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     public void setRoles(Role ...roles) {
+        this.roles  = new HashSet<>();
         this.roles.addAll(Arrays.asList(roles));
+
     }
 
 }

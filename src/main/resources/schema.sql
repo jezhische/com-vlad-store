@@ -7,3 +7,6 @@
 -- CONNECTION LIMIT = -1;
 -- GRANT CONNECT, TEMPORARY ON DATABASE textsaver TO public;
 -- GRANT ALL ON DATABASE textsaver TO postgres WITH GRANT OPTION;
+
+--insert into roles values (1, 'CUSTOMER');
+--insert into roles values (2, 'ADMIN');

@@ -1,7 +1,6 @@
-package service;
+package com.vlad.store.service;
 
 import com.vlad.store.model.Role;
-import com.vlad.store.model.roles.RoleEnum;
 import com.vlad.store.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findByRole(RoleEnum role) {
+    public Role findByRole(String role) {
         return roleRepository.findByRole(role);
     }
 }

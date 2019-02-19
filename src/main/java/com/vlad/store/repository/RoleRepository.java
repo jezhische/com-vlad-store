@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findByRole(RoleEnum role);
+    Role findByRole(String role);
 
     Role findById(long id);
 }

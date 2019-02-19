@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
 
     @Id
@@ -22,5 +22,5 @@ public class Role {
     private long id;
 
     @Column(name = "role")
-    private RoleEnum role;
+    private String role;
 }

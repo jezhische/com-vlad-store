@@ -11,4 +11,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findByLogin(@NotEmpty(message = "*Please provide your login") String login);
 
     Customer findById(long id);
+
+    void deleteByLogin(@NotEmpty(message = "*Please provide your login") String login);
 }
