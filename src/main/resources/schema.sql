@@ -15,3 +15,5 @@
 
 -- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = 'jezhische'
 
+select c.login, c.password from customers c where c.login = 'jezhische'
+
