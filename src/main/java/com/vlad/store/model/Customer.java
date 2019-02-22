@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "customers",
-uniqueConstraints = @UniqueConstraint(columnNames = "login"))
+uniqueConstraints = @UniqueConstraint(columnNames = "nickname"))
 public class Customer {
 
     @Id
@@ -28,14 +28,18 @@ public class Customer {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "login")
+    @Column(name = "nickname")
     @NotEmpty(message = "*Please provide your login")
-    private String login;
+    private String nickname;
 
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
     @NotEmpty(message = "*Please provide your password")
     private String password;
+
+    @Column
+    @NotEmpty(message = "*Please provide your name")
+    private String name;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,

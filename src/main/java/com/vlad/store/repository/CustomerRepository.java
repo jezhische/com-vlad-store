@@ -8,9 +8,9 @@ import javax.validation.constraints.NotEmpty;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-    Customer findByLogin(@NotEmpty(message = "*Please provide your login") String login);
+    Customer findByNickname(@NotEmpty(message = "*Please provide your login") String nickname);
 
     Customer findById(long id);
 
-    void deleteByLogin(@NotEmpty(message = "*Please provide your login") String login);
+    void deleteByNickname(String nickname);
 }

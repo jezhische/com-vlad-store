@@ -24,9 +24,9 @@
                 <h2>Registration Form</h2>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('login')}" th:errors="*{login}"
+                        <label th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"
                                class="validation-message"></label>
-                        <input type="text" th:field="*{login}" placeholder="Login"
+                        <input type="text" th:field="*{nickname}" placeholder="Login"
                                class="form-control"/>
                     </div>
                 </div>
@@ -36,6 +36,15 @@
                         <input type="password" th:field="*{password}"
                                placeholder="Password" class="form-control"/> <label
                             th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                            class="validation-message"></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{name}"
+                               placeholder="Name" class="form-control"/> <label
+                            th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
                             class="validation-message"></label>
                     </div>
                 </div>

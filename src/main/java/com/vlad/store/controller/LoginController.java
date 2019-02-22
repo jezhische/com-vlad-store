@@ -40,10 +40,10 @@ public class LoginController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView createNewUser(@Valid Customer customer, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        Customer saved = customerService.findByLogin(customer.getLogin());
+        Customer saved = customerService.findByNickname(customer.getNickname());
         if (saved != null) {
             bindingResult
-                    .rejectValue("login", "error.customer",
+                    .rejectValue("nickname", "error.customer",
                             "There is already a customer registered with the login provided");
         }
         if (bindingResult.hasErrors()) {
@@ -62,8 +62,8 @@ public class LoginController {
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Customer customer = customerService.findByLogin(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + customer.getLogin() + ". You passed the assay.");
+        Customer customer = customerService.findByNickname(auth.getName());
+        modelAndView.addObject("userName", "Welcome " + customer.getName() + ". You passed the assay.");
         modelAndView.addObject("adminMessage","Content Available Only for Customers with Admin Role");
         modelAndView.setViewName("index");
         return modelAndView;

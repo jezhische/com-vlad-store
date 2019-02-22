@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests()
                 .antMatchers("/", "/login", "/registration").permitAll()
 //                .antMatchers("/").permitAll()
-//                .antMatchers("/login").permitAll()
+//                .antMatchers("/nickname").permitAll()
 //                .antMatchers("/registration").permitAll()
                 .antMatchers("/index/**").hasAnyAuthority("ADMIN", "CUSTOMER").anyRequest()
                 .authenticated()
@@ -59,9 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // controller method GET mapped "/index", and THE ADDRESS WILL BE http://localhost:8082/store/index
                 .defaultSuccessUrl("/index")
                 // controller method POST mapped "/index". But in the same time it must be
-                // <form th:action="@{/login}" method="POST"> in the login.html, and THE ADDRESS WILL BE http://localhost:8082/store/login
+                // <form th:action="@{/nickname}" method="POST"> in the nickname.html, and THE ADDRESS WILL BE http://localhost:8082/store/login
 //                .loginProcessingUrl("/index")
-                .usernameParameter("login")
+                .usernameParameter("nickname")
                 .passwordParameter("password")
                 .and()
                 .logout()

@@ -11,9 +11,16 @@
 --insert into roles values (1, 'CUSTOMER');
 --insert into roles values (2, 'ADMIN');
 
--- select login, password from customers where login='jezhische'
+-- select nickname, password from customers where nickname='jezhische'
 
--- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = 'jezhische'
+-- select c.nickname, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.nickname = 'jezhische'
 
-select c.login, c.password from customers c where c.login = 'jezhische'
+--select c.nickname, c.password from customers c where c.nickname = 'jezhische'
 
+-- select id, role from roles;
+
+select c.nickname, c.password, c.name from customers c where c.nickname='jezhische';
+
+select c.nickname, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.nickname = 'jezhische';
+
+select * from customers c where c.nickname='jezhische';

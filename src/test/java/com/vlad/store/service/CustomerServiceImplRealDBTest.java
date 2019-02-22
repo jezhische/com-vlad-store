@@ -6,9 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +19,7 @@ public class CustomerServiceImplRealDBTest extends BasePostgresConnectingTest {
     @Before
     public void setUp() throws Exception {
         customer = Customer.builder()
-                .login("iamthefirst")
+                .nickname("iamthefirst")
                 .password("password")
                 .build();
     }
@@ -34,22 +31,22 @@ public class CustomerServiceImplRealDBTest extends BasePostgresConnectingTest {
 
     @Test
     public void findByLogin() {
-        Customer byLogin = customerService.findByLogin(customer.getLogin());
-        assertEquals(customer.getLogin(), byLogin.getLogin());
+        Customer byLogin = customerService.findByNickname(customer.getNickname());
+        assertEquals(customer.getNickname(), byLogin.getNickname());
     }
 
     @Test
     public void findById() {
-        Customer byLogin = customerService.findByLogin(customer.getLogin());
+        Customer byLogin = customerService.findByNickname(customer.getNickname());
         Customer byId = customerService.findById(byLogin.getId());
-        assertEquals(customer.getLogin(), byId.getLogin());
+        assertEquals(customer.getNickname(), byId.getNickname());
     }
 
     @Test
     public void save() {
         Customer saved = customerService.save(customer);
         Customer byId = customerService.findById(saved.getId());
-        assertEquals(saved.getLogin(), byId.getLogin());
+        assertEquals(saved.getNickname(), byId.getNickname());
         assertEquals(saved, byId);
     }
 
@@ -60,8 +57,8 @@ public class CustomerServiceImplRealDBTest extends BasePostgresConnectingTest {
 
     @Test
     public void deleteByLogin() {
-        customerService.deleteByLogin(customer.getLogin());
-        assertNull(customerService.findByLogin(customer.getLogin()));
+        customerService.deleteByNickname(customer.getNickname());
+        assertNull(customerService.findByNickname(customer.getNickname()));
     }
 }
 

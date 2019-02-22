@@ -28,8 +28,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findByLogin(String login) {
-        return customerRepository.findByLogin(login);
+    public Customer findByNickname(String nickname) {
+        return customerRepository.findByNickname(nickname);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteByLogin(String login) {
-        customerRepository.deleteByLogin(login);
+    public void deleteByNickname(String nickname) {
+        customerRepository.deleteByNickname(nickname);
     }
 }
