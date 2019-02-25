@@ -9,6 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 
 @Service("customerService")
 @Transactional
@@ -43,11 +48,28 @@ public class CustomerServiceImpl implements CustomerService {
         Role customerRole = roleService.findByRole(RoleEnum.CUSTOMER.toString());
 //        System.out.println("************************************************************ from customerServiceImpl.save(): customerRole = " + customerRole.getRole());
         customer.setRoles(customerRole);
+        customer.setEnabled(true);
+        return customerRepository.saveAndFlush(customer);
+    }
+
+    @Override
+    public Customer update(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }
 
     @Override
     public void deleteByLogin(String login) {
         customerRepository.deleteByLogin(login);
+    }
+
+//    @Override
+//    public Optional<Customer> findByRole(String role) {
+//        return customerRepository.findByRole(role);
+//    }
+
+
+    @Override
+    public Set<Customer> findAllByRolesContainingOrderByRoles(Role role) {
+        return customerRepository.findAllByRolesContainingOrderByRoles(role);
     }
 }

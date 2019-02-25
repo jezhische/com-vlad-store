@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>hacked</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/css/inner-styles.css}">-->
+    <link rel="stylesheet" type="text/css" href="css/inner-styles.css">
+</head>
+<body>
+<p style="text-align: center; font-size: 400%; font-weight: bold; font-family: 'Segoe Print'; color: red">
+    It was a terrible mistake of your life
+</p>
+<!--<img src="http://localhost:63343/store/static/images/hacked.png" class="img-center" style="width: 30%; height: 30%" alt="hacked">-->
+<img src="images/hacked.png" id="hack-img" class="img-center" style="width: 30%; height: 30%" alt="hacked">
+
+<form th:action="@{/unlock}" method="get">
+    <button type="submit" class="hack-btn" id="unlock-btn">Send $1000,000 to unlock account</button>
+</form>
+<br><br>
+<!--<a href="login" id="" style="text-align: right; margin-right: 20%; font-weight: bold; font-size: 150%; color: red">check login page</a>-->
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,10 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>index</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/inner-styles.css}">
 </head>
 <body>
 
+<form th:action="@{/logout}" method="get">
+    <input type="submit" class="btn btn-md btn-danger btn-block" name="logout" value="Logout">
+</form>
+<br>
+<div>
+    <a href="swagger" target="_blank" class="swagger-link">swagger</a>
+</div>
+
+<div th:object="${customer}" class="panel-group" style="margin-top:40px">
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align:center; font-size: 150%">
+            <p>Welcome,
+                <span th:utext="*{login}"></span>
+                ! And here are your secret data: your id in the db is
+                <span th:utext="*{id}"></span>
+                 and the password is
+                <span th:utext="*{password}"></span>
+                .<br>
+                <span style="font-size: 100%; color: #FF1C19">
+                    We are very pity that your password is encrypted. It means you are greedy and secretive man.
+                    Don't be so nasty, let us know you credentials, and we make you free!
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div>
+    <form id="hacking" style="display: inline-block; margin-left: 200px">
+        <button type="submit" id="hack-button" class="create-btn">Come on push the button!</button>
+        <input type="text" id="hack-password" class="create-input" placeholder="Put your password right here!">
+    </form>
+</div>
+<div id="hack-message"></div>
+
+
+<!--<img src="http://localhost:63343/store/static/images/sun.jpg"-->
+<img th:src="@{/images/sun.jpg}" id="promo-picture" class="img-center" style="visibility: hidden; width: 20%; height: 20%" alt="promotion">
+
+<!--<img th:src="@{/images/beer.jpg}"/>-->
+<script src="js/main.js"></script>
 </body>
 </html>

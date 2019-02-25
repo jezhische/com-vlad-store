@@ -3,10 +3,12 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Spring Security Tutorial</title>
+    <title>Store Login</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!--<link rel="stylesheet" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <!--<script src="webjars/jquery/3.3.1-2/jquery.js"></script>-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
@@ -33,7 +35,7 @@
                id="password" name="password" class="form-control"/> <br/>
 
         <div align="center" th:if="${param.error}">
-            <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+            <p style="font-size: 20; color: #FF1C19;">Login or Password invalid, please verify</p>
         </div>
         <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit"
                 th:text="Login"></button>

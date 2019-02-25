@@ -37,6 +37,9 @@ public class Customer {
     @NotEmpty(message = "*Please provide your password")
     private String password;
 
+    @Column
+    private boolean enabled;
+
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -44,10 +47,26 @@ public class Customer {
     @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public void setRoles(Role ...roles) {
+    public void setRoles(Role... roles) {
         this.roles  = new HashSet<>();
         this.roles.addAll(Arrays.asList(roles));
+    }
 
+    public void addRoles(Role... roles) {
+        if (this.roles == null) this.roles = new HashSet<>();
+        this.roles.addAll(Arrays.asList(roles));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        return this.id == ((Customer) o).id;
+    }
+
+    @Override
+    public int hashCode() {
+        return login.hashCode();
     }
 
 }

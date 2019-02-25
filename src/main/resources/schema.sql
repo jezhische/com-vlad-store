@@ -8,12 +8,21 @@
 -- GRANT CONNECT, TEMPORARY ON DATABASE textsaver TO public;
 -- GRANT ALL ON DATABASE textsaver TO postgres WITH GRANT OPTION;
 
---insert into roles values (1, 'CUSTOMER');
---insert into roles values (2, 'ADMIN');
+insert into roles values (1, 'CUSTOMER');
+insert into roles values (2, 'ADMIN');
 
--- select login, password from customers where login='jezhische'
+-- select c.login, c.password, c.enabled from customers c where c.login='jezhische'
 
 -- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = 'jezhische'
 
-select c.login, c.password from customers c where c.login = 'jezhische'
+-- select * from customers c where c.login = 'jezhische';
+--
+ select * from roles;
+
+select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
+  inner join roles r on cr.role_id = r.id where c.login = 'iamthefirst';
+
+select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
+  inner join roles r on cr.role_id = r.id where r.role = 'CUSTOMER';
+
 
