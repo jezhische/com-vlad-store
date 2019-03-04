@@ -1,10 +1,11 @@
 package com.vlad.store.service;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.vlad.store.model.Customer;
-import com.vlad.store.model.roles.RoleEnum;
+import com.vlad.store.model.Role;
+import com.vlad.store.model.constants.RoleEnum;
 import com.vlad.store.testConfig.BasePostgresConnectingTest;
 import org.hamcrest.Matchers;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
 
 import java.util.Set;
 
@@ -146,6 +144,30 @@ public class CustomerServiceImplRealDBTest extends BasePostgresConnectingTest {
         Customer jezhische = customerService.findByLogin("jezhische");
         System.out.println("**********************************************" +
                 bCryptPasswordEncoder.matches("password", jezhische.getPassword()));
+    }
+
+    @Test
+    public void setAdminAuthority() {
+        Customer jezhische = customerService.findByLogin("jezhische");
+        Role admin = roleService.findByRole(RoleEnum.ADMIN.toString());
+        Role customer = roleService.findByRole(RoleEnum.CUSTOMER.toString());
+        jezhische.addRoles(customer);
+        if (!jezhische.getRoles().contains(admin)) {
+            System.out.println("****************************************************** set the ADMIN role");
+            jezhische.addRoles(admin);
+        } else             System.out.println("************************************************ the ADMIN role exists");
+        assertTrue(customerService.findByLogin("jezhische").getRoles().contains(admin));
+    }
+
+    @Test
+    public void deleteAdminAuthority() {
+        Customer jezhische = customerService.findByLogin("jezhische");
+        Role admin = roleService.findByRole(RoleEnum.ADMIN.toString());
+        if (jezhische.getRoles().contains(admin)) {
+            System.out.println("****************************************************** delete the ADMIN role");
+            customerService.deleteRole(jezhische, RoleEnum.ADMIN.toString());
+        }
+        assertTrue(!customerService.findByLogin("jezhische").getRoles().contains(admin));
     }
 }
 

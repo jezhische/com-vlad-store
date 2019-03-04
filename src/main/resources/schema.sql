@@ -26,3 +26,9 @@ select c.id, c.enabled, c.login, c.password, r.role from customers c inner join 
   inner join roles r on cr.role_id = r.id where r.role = 'CUSTOMER';
 
 
+create table if not exists test (
+  id bigint not null,
+  img bytea,
+  primary key (id)
+)
+

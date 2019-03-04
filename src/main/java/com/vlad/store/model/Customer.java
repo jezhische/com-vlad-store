@@ -47,6 +47,8 @@ public class Customer {
     @JoinTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    // contact id will be the same, as customer id, so it doesn't need to add "contact" column
+
     public void setRoles(Role... roles) {
         this.roles  = new HashSet<>();
         this.roles.addAll(Arrays.asList(roles));
@@ -54,7 +56,10 @@ public class Customer {
 
     public void addRoles(Role... roles) {
         if (this.roles == null) this.roles = new HashSet<>();
-        this.roles.addAll(Arrays.asList(roles));
+        for (Role r : roles) {
+            if (!this.roles.contains(r)) this.roles.add(r);
+        }
+//        this.roles.addAll(Arrays.asList(roles));
     }
 
     @Override

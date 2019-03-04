@@ -1,4 +1,4 @@
-package com.vlad.store.model.roles;
+package com.vlad.store.model.constants;
 
 import org.junit.Test;
 

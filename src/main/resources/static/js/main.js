@@ -90,8 +90,31 @@ $(function () {
 
 // ------------------------------------------------
 
+    function testIt() {
+        $('#testForm').click(function (event) {
+            event.preventDefault();
+            console.log('testIt submitted');
+            $.ajax({
+                type: 'get',
+                url: 'uploads/test',
+                dataType: 'text',
+                success: function (data, status, jqXHR) {
+                    console.log('test success');
+                    $('#testMessage').html(data);
+                    // if (data) window.location.href = 'terriblemistakeofyourlife.html';
+                    // else hackMessage(password);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('test error');
+                    $('#testMessage').html('test error');
+                }
+            })
+        })
+    }
+
 // ================================================================ P E R F O R M A N C E
     hackButtonBehavior();
-    unlockButtonBehavior()
+    unlockButtonBehavior();
+    testIt();
 
 });

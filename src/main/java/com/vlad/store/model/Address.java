@@ -1,4 +1,4 @@
-package com.vlad.store.model.roles;
+package com.vlad.store.model;
 
 import com.vlad.store.model.Contact;
 import lombok.AllArgsConstructor;

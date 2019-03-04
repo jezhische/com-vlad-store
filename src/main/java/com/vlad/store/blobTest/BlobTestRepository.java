@@ -1,0 +1,15 @@
+package com.vlad.store.blobTest;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface BlobTestRepository extends JpaRepository<BlobTest, Long> {
+
+    List<BlobTest> findAll();
+
+    Optional<BlobTest> findById(Long id);
+}

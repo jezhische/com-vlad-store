@@ -1,6 +1,5 @@
 package com.vlad.store.model;
 
-import com.vlad.store.model.roles.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +23,7 @@ public class Contact {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    // "this way, the id column serves as both Primary Key and FK"
     @MapsId // simply it means that contact.id == customer.id
     private Customer customer;
 
@@ -39,13 +39,16 @@ public class Contact {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "acc_number")
-    private int accNumber;
+    @Column(name = "billing_number")
+    private int billingNumber;
 
-    @OneToMany(mappedBy = "contact",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true)
-    @Column(name = "addresses")
-    private List<Address> addresses;
+//    // customer can have many addresses to send purchases
+//    @OneToMany(mappedBy = "contact",
+//    cascade = CascadeType.ALL,
+//    orphanRemoval = true)
+//    @Column(name = "addresses")
+//    private List<Address> addresses;
+
+    // I can to refuse @OneToMany addresses collection 'cause it's enough to have @ManyToOne relation with Contact in Address class
 
 }
