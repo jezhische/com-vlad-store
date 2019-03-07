@@ -66,7 +66,8 @@ public class Customer {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        return this.id == ((Customer) o).id;
+        return this.id == ((Customer) o).id; // NB: expression for primitive type. For reference type it needs to
+        // return this.id == null ? ((Customer) o).id == null : this.id == ((Customer) o).id;
     }
 
     @Override

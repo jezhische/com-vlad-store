@@ -12,22 +12,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "items")
-public class Item {
+@Table(name = "product_props")
+public class ProductProp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
-    private String name;
 
+    private int size;
 
-    @Column(name = "spec")
-    private String specification;
+    private String color;
 
-    @Lob
-    @Column(name = "image", columnDefinition = "bytea")
-    private byte[] image;
+    private boolean available;
 }
