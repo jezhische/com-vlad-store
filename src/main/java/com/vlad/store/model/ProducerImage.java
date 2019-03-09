@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -13,8 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "attached_files")
-public class FileUploadModel {
+@Table(name = "producer_images")
+public class ProducerImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +31,6 @@ public class FileUploadModel {
     private byte[] data;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "producer_id")
+    private Producer producer;
 }

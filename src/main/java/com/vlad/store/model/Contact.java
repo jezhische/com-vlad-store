@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+
+/**
+ * Customer details for {@link Customer}
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -39,8 +43,8 @@ public class Contact {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "billing_number")
-    private int billingNumber;
+//    @Column(name = "billing_number")
+//    private int billingNumber;
 
 //    // customer can have many addresses to send purchases
 //    @OneToMany(mappedBy = "contact",

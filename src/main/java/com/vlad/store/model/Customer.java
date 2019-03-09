@@ -14,6 +14,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class represents customer as "user" with the required attributes: login, password and enabled.
+ * <p>All the customer details are contained in the {@link Contact} class, that relies with {@code Customer}
+ * by the common id, i.e. includes @interface {@link MapsId} Customer customer (in this case it means that @MapsId
+ * provides the mapping for a simple primary key of the parent entity Customer)</p>
+ */
 @Data
 @Builder
 @AllArgsConstructor

@@ -1,6 +1,6 @@
 package com.vlad.store.repository;
 
-import com.vlad.store.model.FileUploadModel;
+import com.vlad.store.model.ProductImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,17 +10,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FileUploadModelRepository extends JpaRepository<FileUploadModel, Long> {
+public interface FileUploadModelRepository extends JpaRepository<ProductImage, Long> {
 
-    FileUploadModel saveAndFlush(FileUploadModel fileModel);
+    ProductImage saveAndFlush(ProductImage fileModel);
 
-    void delete(FileUploadModel fileModel);
+    void delete(ProductImage fileModel);
 
     void deleteById(Long id);
 
-    Page<FileUploadModel> findAll(Pageable pageable);
+    Page<ProductImage> findAll(Pageable pageable);
 
-    Optional<FileUploadModel> findById(Long id);
+    Optional<ProductImage> findById(Long id);
 
-    List<FileUploadModel> findAllByProductId(Long productId);
+    List<ProductImage> findAllByProductId(Long productId);
 }

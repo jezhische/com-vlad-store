@@ -1,21 +1,21 @@
 package com.vlad.store.service;
 
-import com.vlad.store.model.FileUploadModel;
+import com.vlad.store.model.ProductImage;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FileUploadModelService {
 
-    FileUploadModel saveFile(FileUploadModel fileUploadModel);
+    ProductImage saveFile(ProductImage productImage);
 
-    FileUploadModel updateFile(FileUploadModel fileUploadModel);
+    ProductImage updateFile(ProductImage productImage);
 
-    Optional<FileUploadModel> findById(Long id);
+    Optional<ProductImage> findById(Long id);
 
-    List<FileUploadModel> findAllByProductId(Long productId);
+    List<ProductImage> findAllByProductId(Long productId);
 
-    void delete(FileUploadModel fileModel);
+    void delete(ProductImage fileModel);
 
     void deleteById(Long id);
 }

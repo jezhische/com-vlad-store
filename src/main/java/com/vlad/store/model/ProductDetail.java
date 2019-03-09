@@ -12,8 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product_props")
-public class ProductProp {
+@Table(name = "product_details")
+public class ProductDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,9 +21,16 @@ public class ProductProp {
     private long id;
 
 
+    @Column(name = "size")
     private int size;
 
+    @Column(name = "color")
     private String color;
 
+    @Column(name = "available")
     private boolean available;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

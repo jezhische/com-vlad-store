@@ -7,8 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
+/**
+ * NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:
+ * <p>OneToMany {@link ProductDetail}</p>
+ * <p>OneToMany {@link ProductImage}</p>
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,11 +33,18 @@ public class Product {
     @Column(name = "spec", columnDefinition = "text")
     private String specification;
 
-    @OneToMany
-    @Column(name = "prop")
-    private List<ProductProp> prop;
-
+    @Column(name = "available")
     private boolean available;
 
+    @Column(name = "price")
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producer_id")
+    private Producer producer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 }

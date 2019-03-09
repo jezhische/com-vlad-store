@@ -1,6 +1,6 @@
 package com.vlad.store.service;
 
-import com.vlad.store.model.FileUploadModel;
+import com.vlad.store.model.ProductImage;
 import com.vlad.store.repository.FileUploadModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,27 +21,27 @@ public class FileUploadModelServiceImpl implements FileUploadModelService {
     }
 
     @Override
-    public FileUploadModel saveFile(FileUploadModel fileUploadModel) {
-        return repository.saveAndFlush(fileUploadModel);
+    public ProductImage saveFile(ProductImage productImage) {
+        return repository.saveAndFlush(productImage);
     }
 
     @Override
-    public FileUploadModel updateFile(FileUploadModel fileUploadModel) {
-        return repository.saveAndFlush(fileUploadModel);
+    public ProductImage updateFile(ProductImage productImage) {
+        return repository.saveAndFlush(productImage);
     }
 
     @Override
-    public Optional<FileUploadModel> findById(Long id) {
+    public Optional<ProductImage> findById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public List<FileUploadModel> findAllByProductId(Long productId) {
+    public List<ProductImage> findAllByProductId(Long productId) {
         return repository.findAllByProductId(productId);
     }
 
     @Override
-    public void delete(FileUploadModel fileModel) {
+    public void delete(ProductImage fileModel) {
         repository.delete(fileModel);
     }
 

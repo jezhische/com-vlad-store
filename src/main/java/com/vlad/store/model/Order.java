@@ -1,5 +1,6 @@
 package com.vlad.store.model;
 
+import com.vlad.store.model.constants.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
+/**
+ * NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:
+ * <p>OneToMany {@link OrderItem}</p>
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,6 +29,9 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @Column(name = "status")
+    private OrderStatus status;
 
 
 }
