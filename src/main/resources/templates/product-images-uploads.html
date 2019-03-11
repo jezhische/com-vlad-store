@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>images-uploads</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/inner-styles.css">
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: #8AB8CC">
+<div align="center">
+    <p><h3>Hi, this is uploads page. Admin access only. </h3></p>
+    <form id="testForm">
+        <input type="submit" value="Check test message">
+    </form>
+    <div id="testMessage"></div>
+</div>
+<br>
+<div class="upload-container" >
+    <div class="single-upload">
+        <h3>Upload Single File</h3>
+        <form id="singleUploadForm" name="singleUploadForm">
+            <input id="singleFileUploadInput" type="file" name="file" class="create-input" required />
+            <button type="submit" id="singleFileUploadSubmit" class="create-btn" style="margin-top: 20px">Submit</button>
+        </form>
+        <div class="upload-response">
+            <div id="singleFileUploadError"></div>
+        </div>
+        <div id="singleFileUploadSuccess" align="center"></div>
+        <img id="uploadFileImg" src="" style="width: 80vh; align-content: center">
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>

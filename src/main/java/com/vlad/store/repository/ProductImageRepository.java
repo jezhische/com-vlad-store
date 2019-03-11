@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FileUploadModelRepository extends JpaRepository<ProductImage, Long> {
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
 
     ProductImage saveAndFlush(ProductImage fileModel);
 
@@ -22,5 +22,7 @@ public interface FileUploadModelRepository extends JpaRepository<ProductImage, L
 
     Optional<ProductImage> findById(Long id);
 
-    List<ProductImage> findAllByProductId(Long productId);
+    List<ProductImage> findAllByProductDetails(Long productDetailId);
+
+    Optional<ProductImage> findByFileName(String fileName);
 }

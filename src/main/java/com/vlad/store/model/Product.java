@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 /**
  * NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:
  * <p>OneToMany {@link ProductDetail}</p>
- * <p>OneToMany {@link ProductImage}</p>
+ * <p>OneToMany {@link OrderItem}</p>
  */
 @Data
 @Builder
@@ -24,7 +24,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -36,15 +36,14 @@ public class Product {
     @Column(name = "available")
     private boolean available;
 
+    /**
+     * if it needs that the price would depend from product details (like size and color), this field has to be moved
+     * to {@link ProductDetail}
+     */
     @Column(name = "price")
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producer_id")
     private Producer producer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
 }

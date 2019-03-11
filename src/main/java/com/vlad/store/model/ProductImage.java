@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,7 +21,7 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "fileName")
     private String fileName;
@@ -31,7 +33,18 @@ public class ProductImage {
     @Column(name = "data")
     private byte[] data;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ManyToMany(mappedBy = "productImages") // fetch = FetchType.LAZY by default
+    private Set<ProductDetail> productDetails = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductImage)) return false;
+        return id != null && id.equals(((ProductImage) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * id.intValue();
+    }
 }

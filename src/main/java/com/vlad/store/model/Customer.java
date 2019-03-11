@@ -32,7 +32,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "login")
     @NotEmpty(message = "*Please provide your login")

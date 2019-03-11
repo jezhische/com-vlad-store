@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Customer details for {@link Customer}
+ * <p>NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:</p>
+ * <p>OneToMany {@link Address}</p>
  */
 @Data
 @Builder
@@ -23,7 +25,7 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -40,19 +42,7 @@ public class Contact {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "phone")
-    private String phone;
-
-//    @Column(name = "billing_number")
-//    private int billingNumber;
-
-//    // customer can have many addresses to send purchases
-//    @OneToMany(mappedBy = "contact",
-//    cascade = CascadeType.ALL,
-//    orphanRemoval = true)
-//    @Column(name = "addresses")
-//    private List<Address> addresses;
-
-    // I can to refuse @OneToMany addresses collection 'cause it's enough to have @ManyToOne relation with Contact in Address class
-
+    @ElementCollection
+//    @Column(name = "phones")
+    private List<String> phones;
 }

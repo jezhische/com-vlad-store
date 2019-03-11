@@ -1,4 +1,8 @@
+
+
 $(function () {
+
+// ======================================================================================= page index.html
 
     function hackButtonBehavior() {
          let hackButton = $("#hack-button");
@@ -51,6 +55,8 @@ $(function () {
 
 // ------------------------------------------------
 
+// ========================================================================= page terriblemistakeofyourlife.html
+
     function unlockRequest() {
         $.ajax({
             type: 'post',
@@ -71,24 +77,7 @@ $(function () {
     }
 
 // ------------------------------------------------
-
-//    function hackerRedirect() {
-//        $.ajax({
-//            type: 'post',
-//            url: 'terriblemistakeofyourlife',
-//            dataType: 'json',
-////           contentType: 'text/html',
-////            data: 'terriblemistakeofyourlife',
-//            success: function (data, status, jqXHR) {
-//                window.location.href = 'terriblemistakeofyourlife';
-//            },
-//            error: function (jqXHR, textStatus, errorThrown) {
-//                console.log("hackerRedirect() error");
-//            }
-//        });
-//    }
-
-// ------------------------------------------------
+// ================================================================================== page product-images-uploads.html
 
     function testIt() {
         $('#testForm').click(function (event) {
@@ -96,13 +85,11 @@ $(function () {
             console.log('testIt submitted');
             $.ajax({
                 type: 'get',
-                url: 'uploads/test',
+                url: 'product-images-uploads/test',
                 dataType: 'text',
                 success: function (data, status, jqXHR) {
                     console.log('test success');
                     $('#testMessage').html(data);
-                    // if (data) window.location.href = 'terriblemistakeofyourlife.html';
-                    // else hackMessage(password);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log('test error');
@@ -112,9 +99,56 @@ $(function () {
         })
     }
 
+    // ------------------------------------------------
+
+    function uploadImage(submitId, inputId, successTxtId, errorTxtId, uploadFileImgId) {
+        let submit = $('#' + submitId);
+        let input = $('#' + inputId);
+        let successTxt = $('#' + successTxtId);
+        let errorTxt = $('#' + errorTxtId);
+        let uploadFileImg = $('#' + uploadFileImgId);
+
+        submit.click(function (event) {
+            event.preventDefault();
+            console.log(submitId + ' clicked');
+            let files = input.prop('files');
+            if (!files[0]) {
+                errorTxt.html('Please select a file');
+            } else {
+                let formData = new FormData();
+                formData.append('file', files[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.href, // "http://localhost:8081/store/product-images-uploads" ( + '?file=14.jpeg')
+//                    sending data type - need to be false for multipart file
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+//                    sending data
+                    data: formData,
+//                    The type of data that you're expecting back from the server (i.e. 'obtainedData' type).
+//                    dataType: 'application/json',
+                    success: function (obtainedData, status, jqXHR) {
+                    console.log('file ' + obtainedData.fileName + ' stored in db');
+                        errorTxt.html('');
+//                        errorTxt.css('visibility', 'hidden');
+                        let fileHref = obtainedData.fileDownloadUri;
+                        successTxt.html('<a href="' + fileHref + '" download>' + fileHref + '</a>');
+                        uploadFileImg.attr("src", fileHref);
+                    }, error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+            }
+        })
+    }
+
+
 // ================================================================ P E R F O R M A N C E
     hackButtonBehavior();
     unlockButtonBehavior();
     testIt();
+    uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
+        'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
 
 });
