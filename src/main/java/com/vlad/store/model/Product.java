@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:

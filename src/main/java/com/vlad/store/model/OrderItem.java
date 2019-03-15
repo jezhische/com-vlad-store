@@ -22,7 +22,7 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Customer order;
+    private Order order;
 
     /**
      * every order item contains common information about product and certain information about some features of product,
