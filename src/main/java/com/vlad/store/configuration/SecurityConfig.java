@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                 .antMatchers("/login", "/registration", "/terriblemistakeofyourlife.html").permitAll()
+                .antMatchers("/").anonymous()
                 .antMatchers("/product-images-uploads/**").hasAuthority("ADMIN")
 //                .anyRequest()
 //                .authenticated()
@@ -81,6 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web
 //  let Spring knows that some static resources can be served skipping the antMatchers defined
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers("/bootstrap3.3.7/**", "/css/**", "/js/**", "/images/**");
     }
 }

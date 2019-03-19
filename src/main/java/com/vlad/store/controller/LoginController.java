@@ -1,19 +1,17 @@
 package com.vlad.store.controller;
 
-import javax.validation.Valid;
-
 import com.vlad.store.model.Customer;
 import com.vlad.store.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 public class LoginController {
@@ -27,8 +25,19 @@ public class LoginController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    @GetMapping(value = "/")
+    public ModelAndView letInAnonimous() {
+        ModelAndView modelAndView = new ModelAndView();
+        Customer guest = Customer.builder()
+                .login("guest")
+                .password("111")
+                .build();
+        modelAndView.addObject(guest);
+        modelAndView.setViewName("index");
+        return modelAndView;
+    }
 
-    @GetMapping(value={"/", "/login"})
+    @GetMapping(value={"/login"})
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
@@ -72,16 +81,6 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView();
         // NB the way to get access to user data
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-//        UserDetails userDetails = null;
-//        if (!(auth instanceof AnonymousAuthenticationToken)) {
-//            userDetails = ((UserDetails) auth.getPrincipal());
-//        }
-//        System.out.println("*************** USERNAME: " + userDetails.getUsername());
-//        System.out.println("*************** PASSWORD: " + userDetails.getPassword()); // = null since protected
-//        System.out.println("*************** USERDETAILS: " + userDetails);
-//        System.out.println("*************** CREDENTIALS: " + auth.getCredentials().toString());
-
         Customer customer = customerService.findByLogin(auth.getName());
         modelAndView.addObject("customer", customer);
         modelAndView.setViewName("index");

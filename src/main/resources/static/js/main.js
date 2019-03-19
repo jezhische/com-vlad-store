@@ -99,7 +99,7 @@ $(function () {
         })
     }
 
-    // ------------------------------------------------
+// ------------------------------------------------
 
     function uploadImage(submitId, inputId, successTxtId, errorTxtId, uploadFileImgId) {
         let submit = $('#' + submitId);
@@ -143,6 +143,27 @@ $(function () {
         })
     }
 
+// ------------------------------------------------
+
+    function removeHackerBlockButtonBehavior() {
+        let rHBButton = $('#remove-hacker-block');
+        rHBButton.click(function (event) {
+            event.preventDefault();
+            $('#hacker-block').html('');
+            rHBButton.display('visible', 'false');
+            createLogInput();
+        })
+    }
+
+// ------------------------------------------------
+
+    function createLogInput() {
+
+    }
+
+// ------------------------------------------------
+// ------------------------------------------------
+// ------------------------------------------------
 
 // ================================================================ P E R F O R M A N C E
     hackButtonBehavior();
@@ -150,5 +171,6 @@ $(function () {
     testIt();
     uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
         'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
+    removeHackerBlockButtonBehavior();
 
 });
