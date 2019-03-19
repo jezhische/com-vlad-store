@@ -2,16 +2,13 @@ package com.vlad.store.service;
 
 import com.vlad.store.model.Customer;
 import com.vlad.store.model.Role;
-import com.vlad.store.model.roles.RoleEnum;
+import com.vlad.store.model.constants.RoleEnum;
 import com.vlad.store.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -71,5 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Set<Customer> findAllByRolesContainingOrderByRoles(Role role) {
         return customerRepository.findAllByRolesContainingOrderByRoles(role);
+    }
+
+    @Override
+    public Customer deleteRole(Customer customer, String role) {
+        customer.getRoles().remove(roleService.findByRole(role));
+        return customerRepository.saveAndFlush(customer);
     }
 }

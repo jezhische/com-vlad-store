@@ -45,11 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.
                 authorizeRequests()
-                .antMatchers("/", "/login", "/registration", "/terriblemistakeofyourlife.html").permitAll()
-//                .antMatchers("/").permitAll()
-//                .antMatchers("/login").permitAll()
-//                .antMatchers("/registration").permitAll()
-                .antMatchers("/index/**").hasAnyAuthority("ADMIN", "CUSTOMER").anyRequest()
+                .antMatchers("/login", "/registration", "/terriblemistakeofyourlife.html").permitAll()
+                .antMatchers("/product-images-uploads/**").hasAuthority("ADMIN")
+//                .anyRequest()
+//                .authenticated()
+                .antMatchers("/index/**").hasAnyAuthority("ADMIN", "CUSTOMER")
+                .anyRequest()
                 .authenticated()
                 .and()
                 .csrf().disable()

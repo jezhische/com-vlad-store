@@ -23,4 +23,6 @@ public interface CustomerService {
 //    Optional<Customer> findByRole(String role);
 
     Set<Customer> findAllByRolesContainingOrderByRoles(Role role);
+
+    Customer deleteRole(Customer customer, String role);
 }

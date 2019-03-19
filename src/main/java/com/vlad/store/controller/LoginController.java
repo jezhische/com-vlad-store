@@ -88,6 +88,14 @@ public class LoginController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/access-denied")
+    public ModelAndView setAccessDeniedView() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("access-denied");
+        return modelAndView;
+    }
+
+
 //    =============================================================================================================
 
     // It's very bad practise to send get request with the password parameter.
