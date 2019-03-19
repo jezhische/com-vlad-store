@@ -31,6 +31,7 @@ public class LoginController {
         Customer guest = Customer.builder()
                 .login("guest")
                 .password("111")
+                .id(1L)
                 .build();
         modelAndView.addObject(guest);
         modelAndView.setViewName("index");

@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests()
                 .antMatchers("/login", "/registration", "/terriblemistakeofyourlife.html").permitAll()
-                .antMatchers("/").anonymous()
+                .antMatchers("/").permitAll()
                 .antMatchers("/product-images-uploads/**").hasAuthority("ADMIN")
 //                .anyRequest()
 //                .authenticated()
@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // to use POST "/logout":
 //                .logoutUrl("/logout")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/access-denied")

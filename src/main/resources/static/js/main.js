@@ -149,8 +149,9 @@ $(function () {
         let rHBButton = $('#remove-hacker-block');
         rHBButton.click(function (event) {
             event.preventDefault();
+            console.log($('#hacker-block').html());
             $('#hacker-block').html('');
-            rHBButton.display('visible', 'false');
+            rHBButton.css('visibility', 'hidden');
             createLogInput();
         })
     }
