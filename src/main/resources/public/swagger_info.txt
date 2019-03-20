@@ -1,0 +1,2 @@
+http://localhost:8081/store/v2/api-docs
+http://localhost:8081/store/swagger-ui.html

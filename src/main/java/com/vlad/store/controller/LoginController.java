@@ -25,7 +25,7 @@ public class LoginController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/free-access")
     public ModelAndView letInAnonimous() {
         ModelAndView modelAndView = new ModelAndView();
         Customer guest = Customer.builder()
@@ -57,7 +57,7 @@ public class LoginController {
     }
 
     @PostMapping(value = "/registration")
-    public ModelAndView createNewUser(@Valid Customer customer, BindingResult bindingResult) {
+    public ModelAndView createNewUser(@Valid @ModelAttribute(value = "customer") Customer customer, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         Customer saved = customerService.findByLogin(customer.getLogin());
         if (saved != null) {
