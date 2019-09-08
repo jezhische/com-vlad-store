@@ -1,6 +1,7 @@
 package com.vlad.store.service;
 
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductImageDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

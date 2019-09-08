@@ -1,0 +1,47 @@
+/* table.show-product-images-table  {
+       font-family: arial, sans-serif;
+       border-collapse: collapse;
+       width: 100%;
+       background-color: white;
+   }
+   th.show-product-images-table {
+       border: 1px solid #dddddd;
+       text-align: center;
+       padding: 8px;
+   }
+   table tr.show-product-images-table {
+       border: 1px solid #dddddd;
+       text-align: left;
+       padding: 8px;
+   }
+   .show-product-images-table tr:nth-child(even) {
+       background-color: #dddddd;
+   } */
+
+/*.ptest-ku {background-color: red}*/
+
+table  {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+}
+th, td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.error-text {
+    text-align: center;
+    margin: 20px;
+    font-weight: bold;
+    color: red;
+}
+
+.img-table-cell {
+    height: 200px;
+    padding: 1px;
+}

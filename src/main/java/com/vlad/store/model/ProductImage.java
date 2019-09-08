@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,7 +31,7 @@ public class ProductImage {
     @Column(name = "fileType")
     private String fileType;
 
-    @Lob
+    @Lob @Basic(fetch=LAZY)
     @Column(name = "data")
     private byte[] data;
 

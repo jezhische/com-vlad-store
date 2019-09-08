@@ -1,6 +1,8 @@
 package com.vlad.store.controller;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductImageDTO;
 import com.vlad.store.model.dto.UploadedFileResponse;
 import com.vlad.store.service.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,12 +71,35 @@ public class ProductImageUploadsController {
     ResponseEntity<Resource> downloadFile(@PathVariable(value = "resourceId") Long resourceId,
                                           @Autowired HttpServletRequest request)
             throws NoHandlerFoundException {
-        ProductImage resource = productImageService.findById(resourceId)
-                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY));
+        ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
+                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(resource.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
                         + resource.getFileName() + "\"")
                 .body(new ByteArrayResource(resource.getData()));
     }
+
+    @GetMapping(value = "/product-images/{resourceId}")
+    public @ResponseBody
+    ResponseEntity<ProductImage> getImageData(@PathVariable(value = "resourceId") Long resourceId,
+                                                 @Autowired HttpServletRequest request)
+            throws NoHandlerFoundException {
+        ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
+                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
+        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType(resource.getFileType()))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
+//                        + resource.getFileName() + "\"")
+                .body(resource);
+    }
 }
+// TODO: цена д.б. связана с ProductDetails, поскольку зависит от размера и т.п. А вот ProductImage, видимо, все-таки с Product,
+//  поскольку для разного цвета, размера и т.п. м.б. одна и та же картинка (или на картинке изображен товар с несколькими
+//  цветами-размерами). И, кстати, картинок м.б. несколько для одного и того же товара, это НАДО ОТРАЗИТЬ В ТАБЛИЦЕ у
+//  админа.
+//  Наконец, в таблице д.б. отражены также название и описание товара, так что в вышенаписанном (или новом) методе
+//  контроллера нужно возвращать не ProductImage, а какой-нибудь ProductImageDTO с соответстующими деталями, и, наверное,
+//  URL строить не через @PathVariable /{resourceId}, а через @RequestParam /image?id=...&details=true. И потом нужно
+//  будет еще искать продукт по названию, если его нет - создавать новый, если есть - отображать табличку, и в качестве
+//  details отображать все картинки, связанные с этим продуктом.

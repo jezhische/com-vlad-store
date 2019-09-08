@@ -5,6 +5,7 @@
     <title>images-uploads</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/inner-styles.css">
+    <link rel="stylesheet" type="text/css" href="css/product-images-uploads.css">
     <script src="js/jquery-3.3.1.js"></script>
     <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 </head>
@@ -12,6 +13,9 @@
 <div align="center">
     <p><h3>Hi, this is uploads page. Admin access only. </h3></p>
     <form id="testForm">
+<!-- SERVER: ProductImageUploadsController: uploadsTest(),
+GET url: 'product-images-uploads/test',
+JS: file "product-images-uploads.js" function testIt() -->
         <input type="submit" value="Check test message">
     </form>
     <div id="testMessage"></div>
@@ -24,15 +28,33 @@
     <div class="single-upload">
         <h3>Upload Single File</h3>
         <form id="singleUploadForm" name="singleUploadForm">
+<!-- The input tag of "file" type creates "Выберите файл" button. Pushing this button leads to upload selected file
+from server file system (actually we've got the link to the selected file).
+Then pushing the "submit" button leads to download uploaded file to the database "product_images" table -->
             <input id="singleFileUploadInput" type="file" name="file" class="create-input" required />
+<!-- SERVER: ProductImageUploadsController: uploadFile(@RequestParam("file") MultipartFile file),
+POST url: window.location.href ("http://localhost:8081/store/product-images-uploads" + "?file=filename.jpeg"),
+JS: file "product-images-uploads.js" function uploadImage(submitId, inputId, successTxtId, errorTxtId, uploadFileImgId) -->
             <button type="submit" id="singleFileUploadSubmit" class="create-btn" style="margin-top: 20px">Submit</button>
         </form>
         <div class="upload-response">
+<!-- JS: file "product-images-uploads.js" function uploadImage(...):
+submit.click(...) {if (!files[0])...} sets html here 'Please select a file' -->
             <div id="singleFileUploadError"></div>
         </div>
+<!-- SERVER: ProductImageUploadsController:
+downloadFile(@PathVariable(value = "resourceId") Long resourceId, @Autowired HttpServletRequest request),
+GET url: 'product-images-uploads/download/{resourceId}',
+JS: file "product-images-uploads.js" function uploadImage(...):
+ajax success sets html here '<a href="' + fileHref + '" download>' + fileHref + '</a>' (e.g. 'product-images-uploads/download/40' etc) -->
         <div id="singleFileUploadSuccess" align="center"></div>
+<!-- JS: file "product-images-uploads.js" function uploadImage(...):
+ajax success sets img src="fileHref", kind of src="product-images-uploads/download/40" etc -->
         <img id="uploadFileImg" src="" style="width: 80vh; align-content: center">
     </div>
+</div>
+<div id="find-image-container">
+
 </div>
 
 <script src="js/product-images-uploads.js"></script>

@@ -11,6 +11,9 @@
 insert into roles values (1, 'CUSTOMER');
 insert into roles values (2, 'ADMIN');
 
+
+-- ========================================================================================== test queries
+
 -- select c.login, c.password, c.enabled from customers c where c.login='jezhische'
 
 -- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = 'jezhische'
@@ -20,7 +23,7 @@ insert into roles values (2, 'ADMIN');
  select * from roles;
 
 select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
-  inner join roles r on cr.role_id = r.id where c.login = 'iamthefirst';
+  inner join roles r on cr.role_id = r.id where c.login = 'jezhische';
 
 select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
   inner join roles r on cr.role_id = r.id where r.role = 'CUSTOMER';

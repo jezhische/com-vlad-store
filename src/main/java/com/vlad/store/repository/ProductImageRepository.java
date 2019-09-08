@@ -22,7 +22,11 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     Optional<ProductImage> findById(Long id);
 
+
+
     List<ProductImage> findAllByProductDetails(Long productDetailId);
 
     Optional<ProductImage> findByFileName(String fileName);
+
+
 }

@@ -47,4 +47,15 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producer_id")
     private Producer producer;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product )) return false;
+        return id != null && id.equals(((Product) o).getId());
+    }
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }
