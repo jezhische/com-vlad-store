@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Set;
 
 /**
  * NB: the following relations exists but didn't be reflected in this entity to avoid the loading massive data:
@@ -30,7 +28,6 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-
     @Column(name = "spec", columnDefinition = "text")
     private String specification;
 
@@ -41,8 +38,8 @@ public class Product {
      * if it needs that the price would depend from product details (like size and color), this field has to be moved
      * to {@link ProductDetail}
      */
-    @Column(name = "price")
-    private BigDecimal price;
+//    @Column(name = "price")
+//    private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producer_id")
@@ -51,9 +48,10 @@ public class Product {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Product )) return false;
+        if (!(o instanceof Product)) return false;
         return id != null && id.equals(((Product) o).getId());
     }
+
     @Override
     public int hashCode() {
         return 31;

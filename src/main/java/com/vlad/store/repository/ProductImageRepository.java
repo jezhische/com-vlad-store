@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
 
-    ProductImage saveAndFlush(ProductImage fileModel);
+    <S extends ProductImage> S saveAndFlush(S fileModel);
 
     void delete(ProductImage fileModel);
 

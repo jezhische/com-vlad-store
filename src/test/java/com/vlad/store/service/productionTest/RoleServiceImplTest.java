@@ -1,7 +1,8 @@
-package com.vlad.store.service;
+package com.vlad.store.service.productionTest;
 
 import com.vlad.store.model.Role;
 import com.vlad.store.model.constants.RoleEnum;
+import com.vlad.store.service.RoleService;
 import com.vlad.store.testConfig.BasePostgresConnectingTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
