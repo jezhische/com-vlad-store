@@ -193,7 +193,7 @@ $(function () {
 
     testIt();
 //    createProductImageShowTable();
-    showProductImageById('42');
+    showProductImageById('11');
     uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
         'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
 

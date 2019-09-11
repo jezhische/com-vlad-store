@@ -70,9 +70,9 @@ public class CustomerServiceImplRealDBTest extends BasePostgresConnectingTest {
 
     @Test
     public void addRole() {
-        customerService.findByLogin(customer.getLogin()).addRoles(roleService.findByRole(RoleEnum.ADMIN.toString()));
+        customerService.findByLogin(customer.getLogin()).addRoles(roleService.findByRole(RoleEnum.CUSTOMER.toString()));
         assertTrue(customerService.findByLogin(customer.getLogin()).getRoles().contains(
-                roleService.findByRole(RoleEnum.ADMIN.toString())
+                roleService.findByRole(RoleEnum.CUSTOMER.toString())
         ));
     }
 

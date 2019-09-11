@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -42,6 +44,9 @@ public class ProductDetail {
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // https://stackoverflow.com/questions/7197181/jpa-unidirectional-many-to-one-and-cascading-delete
+    // TODO: test if this annotation admits to delete all the orphans in patch, not one by one
+    @OnDelete(action = OnDeleteAction.CASCADE) // delete the orphans when the parent entity doesn't exist anymore
     @JoinColumn(name = "product_id")
     private Product product;
 
