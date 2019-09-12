@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Product saveAndFlush(Product product);
+    Product save(Product product);
 
     Product update(Product product);
 

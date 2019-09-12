@@ -29,4 +29,6 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, Lo
 
     @Override
     Optional<ProductDetail> findById(Long id);
+
+//    @Query findAllByProduct
 }

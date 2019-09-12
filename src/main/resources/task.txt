@@ -8,3 +8,5 @@
 
 тест для популяции ProductDetail
 контроллер для ProductDetail
+
+добавить в ProductDetailRepository и сервис метод findAllByProduct, может быть, как хранимую функцию, или как @Query

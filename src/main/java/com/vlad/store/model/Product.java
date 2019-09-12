@@ -31,9 +31,6 @@ public class Product {
     @Column(name = "spec", columnDefinition = "text")
     private String specification;
 
-    @Column(name = "available")
-    private boolean available;
-
     /**
      * if it needs that the price would depend from product details (like size and color), this field has to be moved
      * to {@link ProductDetail}

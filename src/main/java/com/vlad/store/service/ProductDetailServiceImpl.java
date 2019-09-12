@@ -54,4 +54,6 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     public Optional<ProductDetail> findById(Long id) {
         return repository.findById(id);
     }
+
+
 }
