@@ -16,19 +16,19 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, Lo
     <S extends ProductDetail> S saveAndFlush(S productDetail);
 
     @Override
-    void delete(ProductDetail productDetail);
+    void delete(ProductDetail productDetail); // Throws: IllegalArgumentException – in case the given entity is null.
 
     @Override
-    void deleteById(Long id);
+    void deleteById(Long id); // IllegalArgumentException – in case the given id is null
 
     @Override
-    List<ProductDetail> findAllById(Iterable<Long> longs);
+    List<ProductDetail> findAllById(Iterable<Long> longs); // ?
 
     @Override
     Page<ProductDetail> findAll(Pageable pageable);
 
     @Override
-    Optional<ProductDetail> findById(Long id);
+    Optional<ProductDetail> findById(Long id); // IllegalArgumentException – if id is null
 
 //    @Query findAllByProduct
 }

@@ -13,6 +13,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -63,13 +65,12 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
     }
 
     @Test
-    @Rollback
+//    @Rollback
     public void onDeleteOrphansBehavior() throws Exception {
         // create a bunch of product_details entries in db
         ArrayList<ProductDetail> productDetailList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ProductDetail detail = productDetailService.save(productDetail);
-            productDetailList.add(detail);
+            productDetailList.add(productDetailService.save(productDetail));
         }
         productDetailList.forEach(detail -> assertEquals(detail, productDetailService.findById(detail.getId()).orElseGet(null)));
         // create products entry
@@ -79,6 +80,10 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
         productDetailList.forEach(detail -> detail.setProduct(saved));
         productDetailList.forEach(detail -> assertEquals(saved, productDetail.getProduct()));
         // delete saved Product and assert that there are no product_details entries with saved Product relations
+//        productService.delete(saved);
+//        List<ProductDetail> byId = productDetailService.findAllById(productDetailList.stream()
+//                .map(ProductDetail::getId).collect(Collectors.toList())); // map(detail -> detail.getId())
+//        assertTrue(byId.isEmpty());
     }
 
     @Test

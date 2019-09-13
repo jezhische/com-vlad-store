@@ -10,3 +10,14 @@
 контроллер для ProductDetail
 
 добавить в ProductDetailRepository и сервис метод findAllByProduct, может быть, как хранимую функцию, или как @Query
+
+
+т.е., чтобы удалить Product (тем более вместе со всеми ProductDetail) и не напороться на constraint violation,
+я должен сделать следующее (видимо, через метод в самом классе, как при MTM? но скорее всего, через сервисы и Query):
+удаление самого Product:
+- найти все ProductDetail, с которыми связан данный Product OTM, и установить им product = null;
+- что касается Producer, то ему пофиг: хотя Product связан с ним MTO, у самого Producer нет колонки с id Product.
+Теперь Producer можно удалить.
+Удаление связанных с ним ProductDetail:
+- вначале пользуемся методом removeProductImages самого класса ProductDetail, стираем связи с картинками;
+- потом удаляем.
