@@ -65,20 +65,26 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
     }
 
     @Test
-//    @Rollback
+    @Rollback
     public void onDeleteOrphansBehavior() throws Exception {
+        // create products entry
+        Product savedProduct = productService.save(product);
+        assertEquals(savedProduct, productService.findById(savedProduct.getId()).orElseGet(Product::new));
         // create a bunch of product_details entries in db
         ArrayList<ProductDetail> productDetailList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            productDetailList.add(productDetailService.save(productDetail));
+            ProductDetail pd = getProductDetail();
+//            pd.setProduct(savedProduct);
+            productDetailList.add(productDetailService.save(pd));
         }
-        productDetailList.forEach(detail -> assertEquals(detail, productDetailService.findById(detail.getId()).orElseGet(null)));
-        // create products entry
-        Product saved = productService.save(this.product);
-        assertEquals(saved, productService.findById(saved.getId()).orElseGet(null));
+        productDetailList.forEach(detail -> {
+            System.out.println("--------------------------------------------------------------- productDetail.id = " + detail.getId());
+            assertEquals(detail, productDetailService.findById(detail.getId()).orElseGet(ProductDetail::new));
+        });
+
         // add MTO relations to product_details bunch
-        productDetailList.forEach(detail -> detail.setProduct(saved));
-        productDetailList.forEach(detail -> assertEquals(saved, productDetail.getProduct()));
+        productDetailList.forEach(detail -> detail.setProduct(savedProduct));
+        productDetailList.forEach(detail -> assertEquals(savedProduct, productDetail.getProduct()));
         // delete saved Product and assert that there are no product_details entries with saved Product relations
 //        productService.delete(saved);
 //        List<ProductDetail> byId = productDetailService.findAllById(productDetailList.stream()
@@ -98,4 +104,14 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
     public void findById() throws Exception {
     }
 
+// ============================================================================================================ util
+
+    private ProductDetail getProductDetail() {
+        return productDetail = ProductDetail.builder()
+                .size(44)
+                .color("blue")
+                .available(true)
+                .price(BigDecimal.valueOf(135))
+                .build();
+    }
 }

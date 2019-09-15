@@ -22,4 +22,20 @@ public interface ProductDetailService {
     Page<ProductDetail> findAll(Pageable pageable);
 
     Optional<ProductDetail> findById(Long id);
+
+    List<ProductDetail> findAllByProductId(Long productId);
+
+    /**
+     * delete all product_details entries by product_id and return a COUNT of deleted entries
+     * @param productId id of the {@code Product} that is an owner of these {@code ProductDetail}'s (OTM relations)
+     * @return COUNT of deleted entries
+     */
+    List<ProductDetail> deleteAllByProductIdReturnDeleted(Long productId);
+
+    /**
+     * delete all product_details entries by product_id and return a COUNT of deleted entries
+     * @param productId id of the {@code Product} that is an owner of these {@code ProductDetail}'s (OTM relations)
+     * @return COUNT of deleted entries
+     */
+    int deleteAllByProductIdReturnCount(Long productId);
 }

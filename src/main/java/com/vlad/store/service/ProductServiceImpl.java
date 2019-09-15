@@ -1,6 +1,7 @@
 package com.vlad.store.service;
 
 import com.vlad.store.model.Product;
+import com.vlad.store.repository.ProductDetailRepository;
 import com.vlad.store.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +15,12 @@ import java.util.Optional;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-    ProductRepository repository;
+    private ProductRepository repository;
+    private ProductDetailRepository detailRepository;
 
-    public ProductServiceImpl(ProductRepository repository) {
+    public ProductServiceImpl(ProductRepository repository, ProductDetailRepository detailRepository) {
         this.repository = repository;
+        this.detailRepository = detailRepository;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Product product) {
+        detailRepository.deleteAllByProductIdReturnCount(product.getId());
         repository.delete(product);
     }
 

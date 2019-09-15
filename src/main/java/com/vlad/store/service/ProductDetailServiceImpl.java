@@ -55,5 +55,18 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         return repository.findById(id);
     }
 
+    @Override
+    public List<ProductDetail> findAllByProductId(Long productId) {
+        return repository.findAllByProductId(productId);
+    }
 
+    @Override
+    public List<ProductDetail> deleteAllByProductIdReturnDeleted(Long productId) {
+        return repository.deleteAllByProductIdReturnDeleted(productId);
+    }
+
+    @Override
+    public int deleteAllByProductIdReturnCount(Long productId) {
+        return repository.deleteAllByProductIdReturnCount(productId);
+    }
 }

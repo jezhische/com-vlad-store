@@ -2,7 +2,7 @@ package com.vlad.store.testUtils;
 
 import java.util.Random;
 
-public class Util {
+public class TestUtil {
     public static String generateRandomName() {
         char[] chararray = new char[5];
         Random random = new Random();
