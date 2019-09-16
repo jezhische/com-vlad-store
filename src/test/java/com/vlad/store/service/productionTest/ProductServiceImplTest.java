@@ -5,9 +5,11 @@ import com.vlad.store.model.ProductDetail;
 import com.vlad.store.service.ProductDetailService;
 import com.vlad.store.service.ProductService;
 import com.vlad.store.testConfig.BasePostgresConnectingTest;
+import com.vlad.store.testUtils.TestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
@@ -68,28 +70,38 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
     @Rollback
     public void onDeleteOrphansBehavior() throws Exception {
         // create products entry
-        Product savedProduct = productService.save(product);
-        assertEquals(savedProduct, productService.findById(savedProduct.getId()).orElseGet(Product::new));
+        Product testProduct = new Product();
+        BeanUtils.copyProperties(product, testProduct);
+        productService.save(testProduct);
+        assertEquals(testProduct, productService.findById(testProduct.getId()).orElseGet(Product::new));
+
         // create a bunch of product_details entries in db
+        int count = 5;
         ArrayList<ProductDetail> productDetailList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < count; i++) {
             ProductDetail pd = getProductDetail();
-//            pd.setProduct(savedProduct);
+//            pd.setProduct(testProduct);
             productDetailList.add(productDetailService.save(pd));
         }
         productDetailList.forEach(detail -> {
             System.out.println("--------------------------------------------------------------- productDetail.id = " + detail.getId());
             assertEquals(detail, productDetailService.findById(detail.getId()).orElseGet(ProductDetail::new));
         });
+        // иной вариант проверки (в параметры передаю Iterable<Long> - в данном случае List<Long>):
+        List<ProductDetail> byId = productDetailService.findAllById(productDetailList.stream()
+                .map(ProductDetail::getId).collect(Collectors.toList())); // map(detail -> detail.getId())
+        assertEquals(count, byId.size());
+        byId.forEach((detail -> assertTrue(productDetailList.contains(detail))));
 
         // add MTO relations to product_details bunch
-        productDetailList.forEach(detail -> detail.setProduct(savedProduct));
-        productDetailList.forEach(detail -> assertEquals(savedProduct, productDetail.getProduct()));
+        productDetailList.forEach(detail -> detail.setProduct(testProduct));
+        productDetailList.forEach(detail -> assertEquals(testProduct, productDetail.getProduct()));
+
         // delete saved Product and assert that there are no product_details entries with saved Product relations
-//        productService.delete(saved);
-//        List<ProductDetail> byId = productDetailService.findAllById(productDetailList.stream()
-//                .map(ProductDetail::getId).collect(Collectors.toList())); // map(detail -> detail.getId())
-//        assertTrue(byId.isEmpty());
+        productService.delete(testProduct);
+        byId = productDetailService.findAllById(productDetailList.stream()
+                .map(ProductDetail::getId).collect(Collectors.toList()));
+        assertTrue(byId.isEmpty());
     }
 
     @Test
@@ -109,7 +121,7 @@ public class ProductServiceImplTest extends BasePostgresConnectingTest {
     private ProductDetail getProductDetail() {
         return productDetail = ProductDetail.builder()
                 .size(44)
-                .color("blue")
+                .color(TestUtil.generateRandomName())
                 .available(true)
                 .price(BigDecimal.valueOf(135))
                 .build();

@@ -33,6 +33,8 @@ public class ProductServiceImpl implements ProductService {
         return repository.saveAndFlush(product);
     }
 
+    // to delete parent entity, need to delete child entities first. I am forced to do it manually 'cause parent
+    // Product entity don't contains a list of child's ProductDetails and I can't do it automatically
     @Override
     public void delete(Product product) {
         detailRepository.deleteAllByProductIdReturnCount(product.getId());
@@ -41,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
+        detailRepository.deleteAllByProductIdReturnCount(id);
         repository.deleteById(id);
     }
 

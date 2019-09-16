@@ -85,7 +85,6 @@ $(function () {
     }
 
 // ---------------------------------------------------------------------------------------------------------
-
     /**
      * render table with results of ajax request of appropriate ProductImage instance
      * @param imgId - id of the ProductImage instance
@@ -192,8 +191,7 @@ $(function () {
 // ================================================================ P E R F O R M A N C E
 
     testIt();
-//    createProductImageShowTable();
-    showProductImageById('11');
+    showProductImageById('289');
     uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
         'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
 
@@ -201,17 +199,3 @@ $(function () {
 
 // =========================================================================================================== CODE END
 // ====================================================================================================================
-
-// рабочий блок:
-// thead.insertAdjacentHTML('afterbegin',
-//     '<th>Id</th>' +
-//     '<th>fileName</th>' +
-//     '<th>fileType</th>' +
-//     '<th>image</th>');
-
-// рабочий блок:
-//        table.classList.add("show-product-images-table");
-// рабочий блок:
-//        document.getElementById('show-product-images-table').firstChild.childNodes[1].innerHTML = 'changed child 1';
-//        document.getElementById('show-product-images-table').firstElementChild.children[1].innerHTML = 'changed child 2';
-//        document.getElementById('show-product-images-table').firstElementChild.children[1].insertAdjacentHTML('afterbegin', 'added to child 2 <br>');

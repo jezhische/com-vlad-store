@@ -45,8 +45,10 @@ public class ProductDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     // https://stackoverflow.com/questions/7197181/jpa-unidirectional-many-to-one-and-cascading-delete
-    // TODO: test if this annotation admits to delete all the orphans in patch, not one by one
-    @OnDelete(action = OnDeleteAction.CASCADE) // delete the orphans when the parent entity doesn't exist anymore
+    // TODO: this annotation admits to delete all the orphans in patch, not one by one. 'Cause it don't work to
+    //  remove orphans automatically when the parent entity doesn't exist anymore, I wrote stored function
+    //  and don't need this annotation
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_id")
     private Product product;
 
