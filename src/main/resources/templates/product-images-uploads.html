@@ -27,6 +27,7 @@ JS: file "product-images-uploads.js" function testIt() -->
 <div class="upload-container" >
     <div class="single-upload">
         <h3>Upload Single File</h3>
+        <!--form action:  JS: file "product-images-uploads.js" function uploadImage(...)-->
         <form id="singleUploadForm" name="singleUploadForm">
 <!-- The input tag of "file" type creates "Выберите файл" button. Pushing this button leads to upload selected file
 from server file system (actually we've got the link to the selected file).
@@ -53,8 +54,23 @@ ajax success sets img src="fileHref", kind of src="product-images-uploads/downlo
         <img id="uploadFileImg" src="" style="width: 80vh; align-content: center">
     </div>
 </div>
-<div id="find-image-container">
+<!--JS: file "product-images-uploads.js"  showProductImageById(imgId, containerId = 'find-image-container')-->
+<div id="find-image-container" class="find-product-container">
+    <form id="find-image-form" class="find-product-form">
+        <label for="find-image-form" class="find-product-form">find image by name</label>
+        <input id="find-image-input" type="text" placeholder="enter image name" class="find-product-form find-product-input"/>
 
+    </form>
+</div>
+
+<div id="find-product-container" class="find-product-container">
+<!--CSS: product-images-uploads.css -->
+    <form id="find-product-form" class="find-product-form">
+        <label for="find-product-input" class="find-product-form">find product by name</label>
+        <input id="find-product-input" type="text" placeholder="enter product name" class="find-product-form find-product-input"/>
+        <button type="submit">Search</button>
+    </form>
+    <button type="submit" id="">Hide results</button>
 </div>
 
 <script src="js/product-images-uploads.js"></script>

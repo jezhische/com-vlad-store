@@ -1,5 +1,6 @@
 package com.vlad.store.service;
 
+import com.vlad.store.model.ProductDetail;
 import com.vlad.store.model.ProductImage;
 import com.vlad.store.model.dto.ProductImageDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,8 @@ public interface ProductImageService {
     Optional<ProductImage> findById(Long id);
 
     List<ProductImage> findAllByProductDetails(Long productDetailId);
+
+    List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail);
 
     List<ProductImage> findAll();
 

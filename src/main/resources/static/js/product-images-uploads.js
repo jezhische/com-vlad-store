@@ -145,6 +145,9 @@ $(function () {
             thead = document.createElement('thead'),
             tbody = document.createElement('tbody');
         table.id = 'show-product-images-table';
+        // table.classList.add('search-result-show-table');
+        // thead.classList.add('search-result-show-table');
+        // tbody.classList.add('search-result-show-table');
         /**
          * create and append table headers
          * @type {string[]}
@@ -154,6 +157,7 @@ $(function () {
         for (let i = 0; i < headers.length; i++) {
             let th = document.createElement('th');
             th.innerHTML = headers[i];
+            // th.classList.add('search-result-show-table');
             thead.append(th);
         }
         table.append(thead);

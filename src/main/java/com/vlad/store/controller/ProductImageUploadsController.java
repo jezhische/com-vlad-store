@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -42,7 +43,7 @@ public class ProductImageUploadsController {
 
     @GetMapping(value = "/test")
     public @ResponseBody String uploadsTest() {
-        return "Hi! Test is successful";
+        return "Hi! Test response from the server is successful";
     }
 
     @PostMapping(value = "")
@@ -93,5 +94,19 @@ public class ProductImageUploadsController {
 //                        + resource.getFileName() + "\"")
                 .body(resource);
     }
+
+//    @GetMapping(value = "/product-images/name", params = {"name"})
+//    public @ResponseBody
+//    ResponseEntity<List<ProductImage>> getImagesByName(@RequestParam(value = "name") String imgName,
+//                                         @Autowired HttpServletRequest request)
+//            throws NoHandlerFoundException {
+//        ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
+//                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
+//        return ResponseEntity.ok()
+////                .contentType(MediaType.parseMediaType(resource.getFileType()))
+////                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
+////                        + resource.getFileName() + "\"")
+//                .body(resource);
+//    }
 }
 

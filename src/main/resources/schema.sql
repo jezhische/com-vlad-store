@@ -51,28 +51,33 @@ END
 '
   LANGUAGE plpgsql;
 
+-- -----------------------------------------------------------------------------------------------------------------
+--   details product_details%ROWTYPE;
+--   p_ids BIGINT;
+--   pnp CHARACTER;
+
+--   FOR p IN SELECT pd FROM product_details AS pd WHERE product_id IN (SELECT p.id FROM products AS p  WHERE p.name LIKE)
+
+--   Вместо LIKE можно использовать ключевое слово ILIKE, чтобы поиск был регистр-независимым с учётом текущей языковой среды
+--   https://postgrespro.ru/docs/postgresql/9.6/functions-matching
+--   pnp := CAST($1 AS CHARACTER);
+
+DROP FUNCTION find_all_product_images_by_product_name_part_order_by_data(VARCHAR);
+
+CREATE OR REPLACE FUNCTION find_all_product_images_by_product_name_part_order_by_data(IN product_name_part VARCHAR) RETURNS SETOF products AS
+'
+DECLARE
+BEGIN
+
+  RETURN query (SELECT * FROM products AS p  WHERE p.name ILIKE CONCAT($$%$$, $1, $$%$$));
+END
+'
+  LANGUAGE plpgsql;
+
 -- ========================================================================================== test queries
-
--- select c.login, c.password, c.enabled from customers c where c.login='jezhische'
-
--- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = 'jezhische'
-
--- select * from customers c where c.login = 'jezhische';
---
---  select * from roles;
---
--- select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
---   inner join roles r on cr.role_id = r.id where c.login = 'jezhische';
---
--- select c.id, c.enabled, c.login, c.password, r.role from customers c inner join customer_role cr on c.id = cr.customer_id
---   inner join roles r on cr.role_id = r.id where r.role = 'CUSTOMER';
---
---
--- create table if not exists test (
---   id bigint not null,
---   img bytea,
---   primary key (id)
--- )
-SELECT p.id FROM products as p where p.name = 'product_p';
-SELECT p FROM products as p where p.id = 67;
+-- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = ?
 -- SELECT * delete_all_product_details_by_product_id_return_count(pid) where pid in(SELECT p.id FROM products as p where p.name = 'product_p');
+
+
+SELECT * FROM find_all_product_images_by_product_name_part_order_by_data('product');
+
