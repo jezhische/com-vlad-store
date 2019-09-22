@@ -62,16 +62,20 @@ ajax success sets img src="fileHref", kind of src="product-images-uploads/downlo
 
     </form>
 </div>
-
+<br>
 <div id="find-product-container" class="find-product-container">
 <!--CSS: product-images-uploads.css -->
     <form id="find-product-form" class="find-product-form">
-        <label for="find-product-input" class="find-product-form">find product by name</label>
-        <input id="find-product-input" type="text" placeholder="enter product name" class="find-product-form find-product-input"/>
-        <button type="submit">Search</button>
+        <fieldset>
+            <legend>product search</legend>
+            <label for="find-product-input" class="find-product-form">find product by name</label>
+            <input id="find-product-input" type="text" placeholder="enter product name" class="find-product-form find-product-input"/>
+            <button type="submit">Search</button>
+        </fieldset>
     </form>
     <button type="submit" id="">Hide results</button>
 </div>
+
 
 <script src="js/product-images-uploads.js"></script>
 
