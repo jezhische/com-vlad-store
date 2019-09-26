@@ -81,3 +81,5 @@ END
 
 SELECT * FROM find_all_product_images_by_product_name_part_order_by_data('product');
 
+SELECT * FROM product_images pi
+

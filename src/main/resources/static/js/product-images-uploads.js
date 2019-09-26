@@ -35,7 +35,9 @@ $(function () {
      * SERVER: ProductImageUploadsController: uploadFile(@RequestParam("file") MultipartFile file),
      * POST url: "product-images-uploads")
      */
-    function uploadImage(submitId, inputId, successTxtId, errorTxtId, uploadFileImgId) {
+    function uploadImage(submitId = 'singleFileUploadSubmit', inputId = 'singleFileUploadInput',
+                         successTxtId = 'singleFileUploadSuccess', errorTxtId = 'singleFileUploadError',
+                         uploadFileImgId = 'uploadFileImg') {
         let submit = $('#' + submitId);
         let input = $('#' + inputId);
         let successTxt = $('#' + successTxtId);
@@ -44,7 +46,6 @@ $(function () {
 
         submit.click(function (event) {
             event.preventDefault();
-            console.log(submitId + ' clicked');
             let files = input.prop('files');
             if (!files[0]) {
                 errorTxt.html('Please select a file');

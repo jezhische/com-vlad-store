@@ -78,10 +78,10 @@ public class ProductImageServiceImpl implements ProductImageService {
         return repository.findAllByProductDetails(productDetailId);
     }
 
-    @Override
-    public List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail) {
-        return repository.findAllByProductNameOrderByData(detail);
-    }
+//    @Override
+//    public List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail) {
+//        return repository.findAllByProductNameOrderByData(detail);
+//    }
 
     @Override
     public List<ProductImage> findAll() {

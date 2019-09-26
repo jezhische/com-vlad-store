@@ -18,7 +18,7 @@ public interface ProductImageService {
 
     List<ProductImage> findAllByProductDetails(Long productDetailId);
 
-    List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail);
+//    List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail);
 
     List<ProductImage> findAll();
 
