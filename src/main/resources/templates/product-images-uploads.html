@@ -55,12 +55,23 @@ ajax success sets img src="fileHref", kind of src="product-images-uploads/downlo
     </div>
 </div>
 <!--JS: file "product-images-uploads.js"  showProductImageById(imgId, containerId = 'find-image-container')-->
-<div id="find-image-container" class="find-product-container">
-    <form id="find-image-form" class="find-product-form">
-        <label for="find-image-form" class="find-product-form">find image by name</label>
-        <input id="find-image-input" type="text" placeholder="enter image name" class="find-product-form find-product-input"/>
-
-    </form>
+<div id="find-image-container" class="find-product-container"></div>
+<div id="find-image-form">
+    <fieldset>
+        <legend>image search</legend>
+        <form id="find-image-by-id-form" class="find-product-form">
+            <label for="find-image-by-id-input" class="find-product-form" style="width: 150px">find image by id</label>
+            <input id="find-image-by-id-input" type="text" placeholder="enter image id" class="find-product-form find-product-input"/>
+            <button type="submit" id="image-by-id-submit">Search</button>
+        </form>
+        <div id="image-id-number-parse-error" class="error-text" style="display: none">Please type number id</div>
+        <br>
+        <form id="find-image-by-name-form" class="find-product-form">
+            <label for="find-image-by-name-input" class="find-product-form" style="width: 150px">find image by name</label>
+            <input id="find-image-by-name-input" type="text" placeholder="enter image name" class="find-product-form find-product-input"/>
+            <button type="submit" id="image-by-name-submit">Search</button>
+        </form>
+    </fieldset>
 </div>
 <br>
 <div id="find-product-container" class="find-product-container">

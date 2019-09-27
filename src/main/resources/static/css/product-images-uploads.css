@@ -43,7 +43,7 @@ tr:nth-child(even) {
 }
 
 .error-text {
-    text-align: center;
+    /*text-align: center;*/
     margin: 20px;
     font-weight: bold;
     color: red;
@@ -55,6 +55,7 @@ tr:nth-child(even) {
 .find-product-form {
     display: inline-block;
     margin-left: 20px;
+    /*width: 150px;*/
 }
 .find-product-input {
     width: 500px;

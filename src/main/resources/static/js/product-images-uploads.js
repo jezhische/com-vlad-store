@@ -86,25 +86,40 @@ $(function () {
     }
 
 // ---------------------------------------------------------------------------------------------------------
+
+    function findProductImageById(input = 'find-image-by-id-input') {
+        let inputElem = document.querySelector(input);
+        let id = Number.parseInt(inputElem.value, 10);
+        let parent = inputElem.getParent();
+        let errorTxt = document.createElement('div');
+        errorTxt.classList.add('error-text');
+        if (!imgId) {
+            errorTxt.innerHTML = 'Please type number id';
+            parent.prepend(errorTxt);
+            return;
+        }
+        return null;
+    }
+// ------------------------------------------------------------------------------------------------------------
+
     /**
      * render table with results of ajax request of appropriate ProductImage instance
      * @param imgId - id of the ProductImage instance
      * @param containerId - here used default value of appropriate <div> element
      */
-    function showProductImageById(imgId, containerId = 'find-image-container') {
-        let container = document.getElementById(containerId);
-        container.innerHTML = '';
-        let errorTxt = document.createElement('div');
-        errorTxt.classList.add('error-text');
-        container.append(errorTxt);
+    function showProductImageById(imgId) { // , containerId = 'find-image-container'
+        // let container = document.getElementById(containerId);
+        // container.innerHTML = '';
+        let numberParseErrorTxt = document.querySelector('#image-id-number-parse-error');
         imgId = Number.parseInt(imgId, 10);
         // parseInt() returns number or NaN to be coerced to boolean true or false with unambiguous way:
         if (!imgId) {
-            errorTxt.innerHTML = 'Please type number id';
+            numberParseErrorTxt.style.display = 'block';
             return;
         }
+        numberParseErrorTxt.style.display = 'none';
         // create table with headers row:
-        let table = createProductImageShowTable(containerId);
+        let table = document.querySelector('#show-product-images-table');
         // send request:
         $.ajax({
             type: 'GET',
@@ -112,14 +127,19 @@ $(function () {
             dataType: 'json',
             success: function (obtainedData, status, jqXHR) {
                 // append table row with image and image details by the following function:
-                appendTableRow(table, obtainedData);
+                appendProductImageShowTableRow(table, obtainedData);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                errorTxt.innerHTML = jqXHR.responseText;
+                numberParseErrorTxt.innerHTML = jqXHR.responseText;
             }
         });
     }
+// ---------------------------------------------------------------------------------------------------------
 
+    function showProductsByName(productName, containerId = 'find-product-container') {
+        let container = document.createElement(containerId);
+
+    }
 // ---------------------------------------------------------------------------------------------------------
 
     // function showProductImagesByPage(page) {
@@ -169,7 +189,7 @@ $(function () {
 
 // ------------------------------------------------------------------------------------------------------------
 
-    function appendTableRow(table, obtainedData) {
+    function appendProductImageShowTableRow(table, obtainedData) {
         let tbody = table.children[1];
         let tr = document.createElement('tr'),
         img = document.createElement('img');
@@ -191,14 +211,53 @@ $(function () {
          tr.append(td);
         tbody.append(tr);
     }
+// ------------------------------------------------------------------------------------------------------------
+
+    function doSubmits() {
+// find-image-by-id-form submit:
+        document.querySelector("#find-image-by-id-form").onsubmit =
+            (event) => {
+                event.preventDefault();
+                let findImageByIdInput = document.querySelector('#find-image-by-id-input');
+// https://learn.javascript.ru/coordinates
+// to save current element coordinates relative to the browser window:
+
+// Это д.б. прокрутка. Т.е. находим текущие координаты прокрутки (окна? боди?), и после загрузки картинки устанавливаем
+// прокрутку на это же место - fixed по окну браузера или absolute по документу = previousScrollCoords + newTableElementHeight
+//                 findImageByIdInput.style.cssText = "position:fixed";
+//                 let fixesCoords = findImageByIdInput.getBoundingClientRect();
+//                 let fixedCoords = document.body.getBoundingClientRect();
+//                 let left = fixesCoords.left;
+//                 let top = fixesCoords.top;
+                showProductImageById(findImageByIdInput.value);
+// now move the input field to its previous position and remove previous text:
+//                 findImageByIdInput.left = left;
+//                 findImageByIdInput.top = top;
+//                 document.body.left = left;
+//                 document.body.top = top;
+                findImageByIdInput.value = '';
+            };
+    }
+// ------------------------------------------------------------------------------------------------------------
+
+    function initializePage() {
+        testIt();
+        uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
+            'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
+        createProductImageShowTable('find-image-container');
+        doSubmits();
+    }
+// ------------------------------------------------------------------------------------------------------------
+
 
 
 // ================================================================ P E R F O R M A N C E
 
-    testIt();
-    showProductImageById('289');
-    uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
-        'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
+    // testIt();
+    // showProductImageById('289');
+    // uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
+    //     'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
+    initializePage();
 
 });
 
