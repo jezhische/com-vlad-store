@@ -235,6 +235,7 @@ $(function () {
 //                 findImageByIdInput.top = top;
 //                 document.body.left = left;
 //                 document.body.top = top;
+                findImageByIdInput.scrollIntoView({block: "center", behavior: "smooth"});
                 findImageByIdInput.value = '';
             };
     }
