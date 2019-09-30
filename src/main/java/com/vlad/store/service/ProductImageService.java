@@ -1,8 +1,6 @@
 package com.vlad.store.service;
 
-import com.vlad.store.model.ProductDetail;
 import com.vlad.store.model.ProductImage;
-import com.vlad.store.model.dto.ProductImageDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,7 +10,11 @@ public interface ProductImageService {
 
     ProductImage saveFile(MultipartFile file);
 
+    ProductImage saveFile(ProductImage productImage);
+
     ProductImage updateFile(ProductImage stored, MultipartFile update);
+
+    ProductImage updateFile(ProductImage stored, ProductImage update);
 
     Optional<ProductImage> findById(Long id);
 
@@ -22,7 +24,7 @@ public interface ProductImageService {
 
     List<ProductImage> findAll();
 
-    Optional<ProductImage> findByFileName(String fileName);
+    List<ProductImage> findByFileName(String fileName);
 
     void delete(ProductImage productImage);
 

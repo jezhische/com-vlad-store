@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -72,48 +73,64 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
 
 
     @Test
+    @Rollback
     public void saveFile() throws IOException {
-        productImageService.saveFile(multipartFile);
-        ProductImage returned = productImageService.findByFileName(FILENAME).get();
+        ProductImage saved = productImageService.saveFile(multipartFile);
+        ProductImage returned = productImageService.findById(saved.getId()).orElseGet(ProductImage::new);
         assertNotNull(returned);
         assertEquals(Files.readAllBytes(file.toPath()).length, returned.getData().length);
     }
 
     @Test
-    public void updateFile() throws IOException {
-        if (!productImageService.findByFileName(FILENAME).isPresent()) productImageService.saveFile(multipartFile);
-        ProductImage returned = productImageService.findByFileName(FILENAME).get();
+    @Rollback
+    public void saveFileOverload() throws IOException {
+        File img = new File("src\\test\\java\\com\\vlad\\store\\testUtils\\map1.jpeg");
+        ProductImage saved = productImageService.saveFile(new ProductImage(img));
+        ProductImage returned = productImageService.findById(saved.getId()).orElseGet(ProductImage::new);
         assertNotNull(returned);
-        Long fileId = returned.getId();
+        assertEquals(Files.readAllBytes(img.toPath()).length, returned.getData().length);
+    }
+
+    @Test
+    @Rollback
+    public void updateFile() throws IOException {
+        if (productImageService.findByFileName(FILENAME).size() == 0) productImageService.saveFile(multipartFile);
+        ProductImage returned = productImageService.findByFileName(FILENAME).get(0);
+        assertNotNull(returned);
+        Long returnedId = returned.getId();
         assertEquals(Files.readAllBytes(file.toPath()).length, returned.getData().length);
 
         productImageService.updateFile(returned, update_multipartFile);
-        returned = productImageService.findByFileName(UPDATE_FILENAME).get();
+        returned = productImageService.findByFileName(UPDATE_FILENAME).get(0);
         assertNotNull(returned);
         Long updateId = returned.getId();
         assertEquals(Files.readAllBytes(update.toPath()).length, returned.getData().length);
-        assertEquals(fileId, updateId);
+        assertEquals(returned, productImageService.findById(updateId).orElseGet(ProductImage::new));
     }
 
     @Test
+    @Rollback
     public void findById() {
     }
 
     @Test
+    @Rollback
     public void findAllByProductDetails() {
     }
 
-    @Test
-    public void delete() {
-        ProductImage returned = productImageService.findByFileName(FILENAME)
-                .orElse(productImageService.findByFileName(UPDATE_FILENAME)
-                .orElseThrow(() -> new RuntimeException("*********************** File Not Found")));
-        productImageService.delete(returned);
-        assertFalse(productImageService.findByFileName(FILENAME).isPresent());
-        assertFalse(productImageService.findByFileName(UPDATE_FILENAME).isPresent());
-    }
+//    @Test
+//    @Rollback
+//    public void delete() {
+//        ProductImage returned = productImageService.findByFileName(FILENAME)
+//                .orElse(productImageService.findByFileName(UPDATE_FILENAME)
+//                .orElseThrow(() -> new RuntimeException("*********************** File Not Found")));
+//        productImageService.delete(returned);
+//        assertFalse(productImageService.findByFileName(FILENAME).isPresent());
+//        assertFalse(productImageService.findByFileName(UPDATE_FILENAME).isPresent());
+//    }
 
     @Test
+    @Rollback
     public void deleteById() {
     }
 }

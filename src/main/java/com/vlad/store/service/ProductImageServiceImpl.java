@@ -1,6 +1,5 @@
 package com.vlad.store.service;
 
-import com.vlad.store.model.ProductDetail;
 import com.vlad.store.model.ProductImage;
 import com.vlad.store.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +34,25 @@ public class ProductImageServiceImpl implements ProductImageService {
                 throw new RuntimeException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
-            System.out.println("********************************************************************* + " +
-                    "ProductImage saveFile(MultipartFile file): file.getContentType() = " + file.getContentType());
-            ProductImage image = ProductImage.builder()
-                    .fileName(fileName)
-                    .fileType(file.getContentType())
-                    .data(file.getBytes())
-                    .build();
+//            System.out.println("********************************************************************* + " +
+//                    "ProductImage saveFile(MultipartFile file): file.getContentType() = " + file.getContentType());
+            ProductImage image =
+//                    ProductImage.builder()
+//                    .fileName(fileName)
+//                    .fileType(file.getContentType())
+//                    .data(file.getBytes())
+//                    .build();
+                    new ProductImage(fileName, file.getContentType(), file.getBytes());
 
             return repository.saveAndFlush(image);
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }
+    }
+
+    @Override
+    public ProductImage saveFile(ProductImage productImage) {
+        return repository.saveAndFlush(productImage);
     }
 
     @Override
@@ -66,6 +72,14 @@ public class ProductImageServiceImpl implements ProductImageService {
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + newFileName + ". Please try again!", ex);
         }
+    }
+
+    @Override
+    public ProductImage updateFile(ProductImage stored, ProductImage update) {
+        stored.setFileName(update.getFileName());
+        stored.setFileType(update.getFileType());
+        stored.setData(update.getData());
+        return repository.saveAndFlush(stored);
     }
 
     @Override
@@ -89,7 +103,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public Optional<ProductImage> findByFileName(String fileName) {
+    public List<ProductImage> findByFileName(String fileName) {
         return repository.findByFileName(fileName);
     }
 

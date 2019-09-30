@@ -1,5 +1,6 @@
 package com.vlad.store.testUtils;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class TestUtil {
@@ -17,5 +18,13 @@ public class TestUtil {
             chararray[i] = next;
         }
         return String.valueOf(chararray);
+    }
+
+    public static BigDecimal generateRandomPrice() {
+        return new BigDecimal(Math.random() * 1000);
+    }
+
+    public static int generateRandomSize() {
+        return 30 + (int) (Math.random() * 40);
     }
 }

@@ -1,28 +1,3 @@
-/*.search-result-show-table {*/
-    /*width: 100%;*/
-    /*text-align: center;*/
-    /*border: 1px solid #dddddd;*/
-/*}*/
-/*table .search-result-show-table  {*/
-    /*font-family: arial, sans-serif;*/
-    /*border-collapse: collapse;*/
-    /*!*width: 100%;*!*/
-    /*background-color: white;*/
-/*}*/
-/*!*th .search-result-show-table, td .search-result-show-table, *!*/
-/*tbody .search-result-show-table, thead .search-result-show-table {*/
-    /*!*border: 1px solid #dddddd;*!*/
-    /*!*text-align: center;*!*/
-    /*padding: 8px;*/
-/*}*/
-/*tr:nth-child(even) .search-result-show-table  {*/
-    /*background-color: #dddddd;*/
-/*}*/
-/*.img-table-cell {*/
-    /*height: 200px;*/
-    /*padding: 1px;*/
-/*}*/
-
 table  {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -45,6 +20,7 @@ tr:nth-child(even) {
 .error-text {
     /*text-align: center;*/
     margin: 20px;
+    margin-left: 300px;
     font-weight: bold;
     color: red;
 }

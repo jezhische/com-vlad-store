@@ -105,21 +105,29 @@ $(function () {
     /**
      * render table with results of ajax request of appropriate ProductImage instance
      * @param imgId - id of the ProductImage instance
-     * @param containerId - here used default value of appropriate <div> element
+     * @param errorTxtId - id of the error message block
+     * @param imgDataTableId - id of the image data table block
+     * @param formId - id of the find-image form
      */
-    function showProductImageById(imgId) { // , containerId = 'find-image-container'
-        // let container = document.getElementById(containerId);
-        // container.innerHTML = '';
-        let numberParseErrorTxt = document.querySelector('#image-id-number-parse-error');
+    function showProductImageById(imgId,
+                                  errorTxtId = 'image-id-number-parse-error',
+                                  imgDataTableId = 'show-product-images-table',
+                                  formId = 'find-image-by-id-form') {
+        let form = document.querySelector(`#${formId}`);
+        let numberParseErrorTxt = document.querySelector('#' + errorTxtId);
         imgId = Number.parseInt(imgId, 10);
         // parseInt() returns number or NaN to be coerced to boolean true or false with unambiguous way:
         if (!imgId) {
+            numberParseErrorTxt.innerHTML = 'Please type number id.  ';
             numberParseErrorTxt.style.display = 'block';
+// after error text appeared, move the form field to the bottom position (arg false)
+            form.scrollIntoView(false);
             return;
         }
+        numberParseErrorTxt.innerHTML = '';
         numberParseErrorTxt.style.display = 'none';
         // create table with headers row:
-        let table = document.querySelector('#show-product-images-table');
+        let table = document.querySelector('#' + imgDataTableId);
         // send request:
         $.ajax({
             type: 'GET',
@@ -127,10 +135,20 @@ $(function () {
             dataType: 'json',
             success: function (obtainedData, status, jqXHR) {
                 // append table row with image and image details by the following function:
-                appendProductImageShowTableRow(table, obtainedData);
+                if (jqXHR.status >= 200 && jqXHR.status < 300) appendProductImageShowTableRow(table, obtainedData);
+// FIXME: why else clause do not work?
+                else if (jqXHR.status == 404) {
+                    numberParseErrorTxt.innerHTML += '404: image not found';
+                    numberParseErrorTxt.style.display = 'block';
+                } else {
+                    numberParseErrorTxt.innerHTML += `Error occured: ${jqXHR.status}: ${jqXHR.statusText}`;
+                    numberParseErrorTxt.style.display = 'block';
+                }
+// after table row appended or error text displayed, move the form field to the bottom position (arg false)
+                form.scrollIntoView(false);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                numberParseErrorTxt.innerHTML = jqXHR.responseText;
+                numberParseErrorTxt.innerHTML += jqXHR.responseText;
             }
         });
     }
@@ -153,10 +171,12 @@ $(function () {
 
     /**
      * create table with headers row to render results of ajax request of a ProductImage instance
-     * @param containerId - here used default value of appropriate <div> element
+     * @param containerId
+     * @param imgDataTableId
      * @return {HTMLElement}
      */
-    function createProductImageShowTable(containerId = 'find-image-container') {
+    function createProductImageShowTable(containerId = 'find-image-container',
+                                         imgDataTableId = 'show-product-images-table') {
         /**
          * obtain and create table elements
          * @type {HTMLElement}
@@ -165,20 +185,12 @@ $(function () {
         let table = document.createElement('table'),
             thead = document.createElement('thead'),
             tbody = document.createElement('tbody');
-        table.id = 'show-product-images-table';
-        // table.classList.add('search-result-show-table');
-        // thead.classList.add('search-result-show-table');
-        // tbody.classList.add('search-result-show-table');
-        /**
-         * create and append table headers
-         * @type {string[]}
-         */
-        // let headers = ['<th>Id</th>', '<th>fileName</th>', '<th>fileType</th>', '<th>image</th>'];
-        let headers = ['id', 'fileName', 'fileType', 'image'];
+        table.id = imgDataTableId;
+// create and append table headers
+        let headers = ['id', 'fileName', 'fileType', 'image', 'hide'];
         for (let i = 0; i < headers.length; i++) {
             let th = document.createElement('th');
             th.innerHTML = headers[i];
-            // th.classList.add('search-result-show-table');
             thead.append(th);
         }
         table.append(thead);
@@ -188,12 +200,18 @@ $(function () {
     }
 
 // ------------------------------------------------------------------------------------------------------------
-
-    function appendProductImageShowTableRow(table, obtainedData) {
+    /**
+     * display results of request for ProductImage data
+     * @param table - table to display results
+     * @param obtainedData - an object containing ProductImage data (id, fileName, fileType and image data byte array)
+     * @param formId - id of the searching form
+     */
+    function appendProductImageShowTableRow(table, obtainedData, formId = '#find-image-by-id-form') {
         let tbody = table.children[1];
         let tr = document.createElement('tr'),
         img = document.createElement('img');
-        let properties = ['id', 'fileName', 'fileType']; // , 'data'
+        // an array with obtainedData properties names to convenient adding table data
+        let properties = ['id', 'fileName', 'fileType'];
         for (let i = 0; i < properties.length; i++) {
             let td = document.createElement('td');
             td.innerHTML = obtainedData[properties[i]];
@@ -206,36 +224,32 @@ $(function () {
         img.src = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['data'];
         img.alt = obtainedData.fileName;
         img.classList.add('img-table-cell');
-         let td = document.createElement('td');
-         td.append(img);
-         tr.append(td);
+         let imgTd = document.createElement('td');
+         imgTd.append(img);
+         tr.append(imgTd);
+ // create 'hide' button to remove the current table row
+        let hideBtn = document.createElement('input');
+        hideBtn.type = 'submit';
+        hideBtn.value = 'hide';
+        // hideBtn.classList.add('hide-product-img-row');
+        hideBtn.onclick = (event) => {
+            event.preventDefault();
+            hideBtn.parentElement.parentElement.innerHTML = '';
+        };
+        let hideTd = document.createElement('td');
+        hideTd.append(hideBtn);
+        tr.append(hideTd);
         tbody.append(tr);
     }
 // ------------------------------------------------------------------------------------------------------------
 
     function doSubmits() {
 // find-image-by-id-form submit:
-        document.querySelector("#find-image-by-id-form").onsubmit =
+        document.querySelector('#find-image-by-id-form').onsubmit =
             (event) => {
                 event.preventDefault();
                 let findImageByIdInput = document.querySelector('#find-image-by-id-input');
-// https://learn.javascript.ru/coordinates
-// to save current element coordinates relative to the browser window:
-
-// Это д.б. прокрутка. Т.е. находим текущие координаты прокрутки (окна? боди?), и после загрузки картинки устанавливаем
-// прокрутку на это же место - fixed по окну браузера или absolute по документу = previousScrollCoords + newTableElementHeight
-//                 findImageByIdInput.style.cssText = "position:fixed";
-//                 let fixesCoords = findImageByIdInput.getBoundingClientRect();
-//                 let fixedCoords = document.body.getBoundingClientRect();
-//                 let left = fixesCoords.left;
-//                 let top = fixesCoords.top;
                 showProductImageById(findImageByIdInput.value);
-// now move the input field to its previous position and remove previous text:
-//                 findImageByIdInput.left = left;
-//                 findImageByIdInput.top = top;
-//                 document.body.left = left;
-//                 document.body.top = top;
-                findImageByIdInput.scrollIntoView({block: "center", behavior: "smooth"});
                 findImageByIdInput.value = '';
             };
     }
@@ -245,7 +259,7 @@ $(function () {
         testIt();
         uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
             'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
-        createProductImageShowTable('find-image-container');
+        createProductImageShowTable('find-image-container', 'show-product-images-table');
         doSubmits();
     }
 // ------------------------------------------------------------------------------------------------------------

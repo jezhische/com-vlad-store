@@ -1,9 +1,6 @@
 package com.vlad.store.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -21,6 +18,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//@RequiredArgsConstructor
 @Entity
 @Table(name = "product_details")
 public class ProductDetail {
@@ -44,13 +42,10 @@ public class ProductDetail {
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    // https://stackoverflow.com/questions/7197181/jpa-unidirectional-many-to-one-and-cascading-delete
-    // TODO: this annotation admits to delete all the orphans in patch, not one by one. 'Cause it don't work to
-    //  remove orphans automatically when the parent entity doesn't exist anymore, I wrote stored function
-    //  and don't need this annotation
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_id")
-    private Product product;
+    // lombok @RequiredArgsConstructor generates constructor for all final or @NonNull fields
+//    @NonNull
+    private /*final*/ Product product;
 
     /**
      * need many-to-many relations 'cause certain product details can have many images as well as
@@ -60,9 +55,14 @@ public class ProductDetail {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // fetch = FetchType.LAZY by default
     @JoinTable(name = "product_detail_product_image", joinColumns = @JoinColumn(name = "product_detail_id"),
     inverseJoinColumns = @JoinColumn(name = "product_image_id"))
-    private Set<ProductImage> productImages = new HashSet<>();
+    private Set<ProductImage> productImages;
 
+// NB: if ProductImage image object is non-persisted, I'll get
+// java.lang.NullPointerException at com.vlad.store.model.ProductImage.hashCode(ProductImage.java:90)
+// as image.id == null
+// And if ProductDetail detail object is non-persisted, I'll get the same
     public void addProductImages(ProductImage ... images) {
+        if (productImages == null) productImages = new HashSet<>();
         for (ProductImage image :
                 images) {
             productImages.add(image);
@@ -71,10 +71,12 @@ public class ProductDetail {
     }
 
     public void removeProductImages(ProductImage ... images) {
-        for (ProductImage image :
-                images) {
-            productImages.remove(image);
-            image.getProductDetails().remove(this);
+        if (productImages != null && productImages.size() > 0) {
+            for (ProductImage image :
+                    images) {
+                productImages.remove(image);
+                image.getProductDetails().remove(this);
+            }
         }
     }
 

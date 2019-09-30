@@ -62,9 +62,9 @@ END
 --   https://postgrespro.ru/docs/postgresql/9.6/functions-matching
 --   pnp := CAST($1 AS CHARACTER);
 
-DROP FUNCTION find_all_product_images_by_product_name_part_order_by_data(VARCHAR);
+DROP FUNCTION find_all_products_by_product_name_part_order_by_data(VARCHAR);
 
-CREATE OR REPLACE FUNCTION find_all_product_images_by_product_name_part_order_by_data(IN product_name_part VARCHAR) RETURNS SETOF products AS
+CREATE OR REPLACE FUNCTION find_all_products_by_product_name_part_order_by_data(IN product_name_part VARCHAR) RETURNS SETOF products AS
 '
 DECLARE
 BEGIN
@@ -74,12 +74,34 @@ END
 '
   LANGUAGE plpgsql;
 
+-- -----------------------------------------------------------------------------------------------------------------
+DROP FUNCTION find_distinct_product_images_id_by_product_name_part_order_by_data(VARCHAR);
+
+CREATE OR REPLACE FUNCTION find_distinct_product_images_id_by_product_name_part_order_by_data(IN product_name_part VARCHAR) RETURNS SETOF BIGINT AS
+'
+DECLARE
+BEGIN
+
+  RETURN query (SELECT DISTINCT pi.id FROM product_images pi
+                             INNER JOIN product_detail_product_image pd_pi on pi.id = pd_pi.product_image_id
+                             INNER JOIN product_details pd ON pd_pi.product_detail_id = pd.id
+                             INNER JOIN products p ON pd.product_id = p.id WHERE p.name ILIKE CONCAT($$%$$, $1, $$%$$));
+END
+'
+  LANGUAGE plpgsql;
+
 -- ========================================================================================== test queries
 -- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = ?
 -- SELECT * delete_all_product_details_by_product_id_return_count(pid) where pid in(SELECT p.id FROM products as p where p.name = 'product_p');
 
 
-SELECT * FROM find_all_product_images_by_product_name_part_order_by_data('product');
+SELECT * FROM find_all_products_by_product_name_part_order_by_data('estPW');
 
-SELECT * FROM product_images pi
+SELECT DISTINCT pi.id FROM product_images pi
+                             INNER JOIN product_detail_product_image pd_pi on pi.id = pd_pi.product_image_id
+                             INNER JOIN product_details pd ON pd_pi.product_detail_id = pd.id
+                             INNER JOIN products p ON pd.product_id = p.id WHERE p.name ILIKE '%stPW%';
+
+SELECT * FROM find_distinct_product_images_id_by_product_name_part_order_by_data('estPW');
+
 
