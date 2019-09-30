@@ -22,8 +22,15 @@ public class ProductImageRepositoryTest extends BasePostgresConnectingTest {
 
     }
 
-    @Test
-    public void findAllByProductDetailsContainsProductNameOrderByData() throws Exception {
+//    @Test
+//    public void findAllByProductDetailsContainsProductNameOrderByData() throws Exception {
+//
+//    }
 
+
+    @Test
+    public void findDistinctProductImagesIdByProductNamePartOrderByDatetime() throws Exception {
+        System.out.println("**********************************************************"
+                + repository.findDistinctProductImagesIdByProductNamePartOrderByDatetime("test"));
     }
 }

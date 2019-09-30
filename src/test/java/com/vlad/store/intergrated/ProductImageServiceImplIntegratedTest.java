@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
+public class ProductImageServiceImplIntegratedTest extends BasePostgresConnectingTest {
 
     @Autowired
     private ProductImageService productImageService;
@@ -45,6 +45,11 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
         product = null;
     }
 
+    /**
+     * to save one test Product, 5 related ProductDetails and 2 ProductImage for each to the real db,
+     * comment @Rollback annotation
+     * @throws Exception
+     */
     @Test
     @Rollback
     public void saveProductWithBatch() throws Exception {
@@ -99,8 +104,12 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
     public void deleteById() {
     }
 
+    @Test
+    public void findAllProductImageIdByProductName() throws Exception {
+        productImageService.findAllProductImageIdByProductName();
+    }
 
-// ============================================================================================================ util
+    // ============================================================================================================ util
 
     private ProductDetail getProductDetail() {
         return ProductDetail.builder()

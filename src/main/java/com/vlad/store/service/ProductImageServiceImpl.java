@@ -1,5 +1,6 @@
 package com.vlad.store.service;
 
+import com.vlad.store.model.Product;
 import com.vlad.store.model.ProductImage;
 import com.vlad.store.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -115,6 +122,22 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+// ---------------------------------------------------------------------------------------------------------------------
+    @Autowired
+    private EntityManagerFactory emf;
+
+    @Override
+    public void findAllProductImageIdByProductName() {
+        EntityManager entityManager = emf.createEntityManager();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
+        criteriaQuery.select(root);
+        TypedQuery<Product> query = entityManager.createQuery(criteriaQuery);// qlString + Class resultClass
+        List<Product> resultList = query.getResultList();
+        resultList.forEach(result -> System.out.println("*************************************************** " + result));
     }
 
 }
