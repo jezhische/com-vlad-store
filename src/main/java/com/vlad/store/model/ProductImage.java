@@ -22,12 +22,9 @@ import java.util.Set;
 import static javax.persistence.FetchType.LAZY;
 
 @Data
-//@Builder
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Entity
 @Table(name = "product_images")
-
+// https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
 @SqlResultSetMapping(
         name = "SelectProductJoinProductImageDTO",
         classes = {@ConstructorResult(
@@ -43,11 +40,13 @@ import static javax.persistence.FetchType.LAZY;
         )
         }
 )
-// see ProductImageRepository.class
+
 @NamedNativeQuery(name = "SelectProductJoinProductImageDTO",
-//        resultClass = ProductJoinProductImageDTO.class,
 //        query = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)")
-        query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData FROM test1() tst",
+//        query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData FROM test1() tst",
+        query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, " +
+                "tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData " +
+                "FROM find_product_product_images_id_by_product_name_part(?1) tst",
         resultSetMapping = "SelectProductJoinProductImageDTO")
 public class ProductImage {
 

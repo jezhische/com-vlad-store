@@ -144,8 +144,10 @@ public class ProductImageServiceImpl implements ProductImageService {
 
 
     @Override
-    public List<ProductJoinProductImageDTO> test1test() {
-        return entityManager.createNamedQuery("SelectProductJoinProductImageDTO", ProductJoinProductImageDTO.class).getResultList();
+    public List<ProductJoinProductImageDTO> test1test(String productNamePart) {
+        return entityManager.createNamedQuery("SelectProductJoinProductImageDTO", ProductJoinProductImageDTO.class)
+                .setParameter("product_name_part", productNamePart)
+                .getResultList();
     }
 
 }
