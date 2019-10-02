@@ -2,6 +2,7 @@ package com.vlad.store.service;
 
 import com.vlad.store.model.Product;
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import com.vlad.store.repository.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,11 +127,12 @@ public class ProductImageServiceImpl implements ProductImageService {
 
 // ---------------------------------------------------------------------------------------------------------------------
     @Autowired
-    private EntityManagerFactory emf;
+//    private EntityManagerFactory emf;
+        EntityManager entityManager;
 
     @Override
     public void findAllProductImageIdByProductName() {
-        EntityManager entityManager = emf.createEntityManager();
+//        EntityManager entityManager = emf.createEntityManager();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
@@ -138,6 +140,12 @@ public class ProductImageServiceImpl implements ProductImageService {
         TypedQuery<Product> query = entityManager.createQuery(criteriaQuery);// qlString + Class resultClass
         List<Product> resultList = query.getResultList();
         resultList.forEach(result -> System.out.println("*************************************************** " + result));
+    }
+
+
+    @Override
+    public List<ProductJoinProductImageDTO> test1test() {
+        return entityManager.createNamedQuery("SelectProductJoinProductImageDTO", ProductJoinProductImageDTO.class).getResultList();
     }
 
 }

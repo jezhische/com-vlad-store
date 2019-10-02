@@ -133,4 +133,9 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
     @Rollback
     public void deleteById() {
     }
+
+    @Test
+    public void test1test() throws Exception {
+        System.out.println("**************************************" + productImageService.test1test());
+    }
 }

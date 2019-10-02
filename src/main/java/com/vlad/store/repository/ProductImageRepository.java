@@ -38,11 +38,11 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
 // see @NamedNativeQuery in the ProductJoinProductImageDTO.class
     @Query(name = "join_result_find_product_product_images_id_by_product_name_part",
-            value = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)",
-//            value = "SELECT * FROM test1()",
+//            value = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)",
+            value = "SELECT * FROM test1()",
             nativeQuery = true)
-    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart(/*@Param("param1")*/ String productNamePart);
-//    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart();
+//    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart(/*@Param("param1")*/ String productNamePart);
+    List<Object> findProductJoinProductImagesIdByProductNamePart();
 
 
 }

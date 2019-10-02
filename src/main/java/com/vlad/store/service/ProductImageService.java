@@ -1,6 +1,7 @@
 package com.vlad.store.service;
 
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface ProductImageService {
     void deleteById(Long id);
 
     void findAllProductImageIdByProductName();
+
+    List<ProductJoinProductImageDTO> test1test();
 }

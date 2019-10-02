@@ -45,15 +45,15 @@ public class ProductImageRepositoryTest extends BasePostgresConnectingTest {
     @Test
     public void findProductJoinProductImagesIdByProductNamePart() {
         System.out.println("**********************************************************" +
-                repository.findProductJoinProductImagesIdByProductNamePart("test"));
-//                repository.findProductJoinProductImagesIdByProductNamePart());
+//                repository.findProductJoinProductImagesIdByProductNamePart("test"));
+                repository.findProductJoinProductImagesIdByProductNamePart());
     }
 
-    @Test
-    public void test1() {
-        Query nativeQuery = em.createNativeQuery("SELECT * FROM find_product_product_images_id_by_product_name_part('test')");
-        List resultList = nativeQuery.getResultList();
-        System.out.println("*********" + resultList);
-//        System.out.println(((ProductJoinProductImageDTO) resultList.get(0)));
-    }
+//    @Test
+//    public void test1() {
+//        Query nativeQuery = em.createNativeQuery("SELECT * FROM find_product_product_images_id_by_product_name_part('test')");
+//        List resultList = nativeQuery.getResultList();
+//        System.out.println("*********" + resultList);
+////        System.out.println(((ProductJoinProductImageDTO) resultList.get(0)));
+//    }
 }
