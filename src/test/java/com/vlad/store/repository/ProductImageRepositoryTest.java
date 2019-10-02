@@ -33,4 +33,11 @@ public class ProductImageRepositoryTest extends BasePostgresConnectingTest {
         System.out.println("**********************************************************"
                 + repository.findDistinctProductImagesIdByProductNamePartOrderByDatetime("test"));
     }
+
+    @Test
+    public void findProductJoinProductImagesIdByProductNamePart() {
+        System.out.println("**********************************************************" +
+                repository.findProductJoinProductImagesIdByProductNamePart("test"));
+//                repository.findProductJoinProductImagesIdByProductNamePart());
+    }
 }

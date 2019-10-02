@@ -1,6 +1,7 @@
 package com.vlad.store.repository;
 
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,11 +33,16 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     List<ProductImage> findByFileName(String fileName);
 
-//    @Procedure(procedureName = "find_distinct_product_images_id_by_product_name_part_order_by_datetime")
-//    List<Long> findDistinctProductImagesIdByProductNamePartOrderByDatetime(@Param("product_name_part") String productNamePart);
-
     @Query(value = "SELECT * FROM find_distinct_product_images_id_by_product_name_part_order_by_datetime(?1)", nativeQuery = true)
     List<Long> findDistinctProductImagesIdByProductNamePartOrderByDatetime(String productNamePart);
+
+// see @NamedNativeQuery in the ProductJoinProductImageDTO.class
+    @Query(name = "join_result_find_product_product_images_id_by_product_name_part",
+            value = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)",
+//            value = "SELECT * FROM test1()",
+            nativeQuery = true)
+    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart(/*@Param("param1")*/ String productNamePart);
+//    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart();
 
 
 }
