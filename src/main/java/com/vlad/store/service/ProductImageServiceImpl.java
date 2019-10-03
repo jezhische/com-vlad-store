@@ -125,7 +125,12 @@ public class ProductImageServiceImpl implements ProductImageService {
         repository.deleteById(id);
     }
 
-// ---------------------------------------------------------------------------------------------------------------------
+    @Override
+    public List<ProductJoinProductImageDTO> selectProductJoinProductImageDTO(String productNamePart) {
+        return repository.selectProductJoinProductImageDTO(productNamePart);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------
 //    @Autowired
 ////    private EntityManagerFactory emf;
 //        EntityManager entityManager;

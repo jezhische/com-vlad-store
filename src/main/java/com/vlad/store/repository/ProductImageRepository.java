@@ -47,4 +47,5 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
     List<ProductJoinProductImageDTO> selectProductJoinProductImageDTO(@Param("product_name_part") String productNamePart);
 
 
+
 }

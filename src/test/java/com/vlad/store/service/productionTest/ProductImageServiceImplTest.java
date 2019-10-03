@@ -118,24 +118,13 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
     public void findAllByProductDetails() {
     }
 
-//    @Test
-//    @Rollback
-//    public void delete() {
-//        ProductImage returned = productImageService.findByFileName(FILENAME)
-//                .orElse(productImageService.findByFileName(UPDATE_FILENAME)
-//                .orElseThrow(() -> new RuntimeException("*********************** File Not Found")));
-//        productImageService.delete(returned);
-//        assertFalse(productImageService.findByFileName(FILENAME).isPresent());
-//        assertFalse(productImageService.findByFileName(UPDATE_FILENAME).isPresent());
-//    }
-
     @Test
     @Rollback
     public void deleteById() {
     }
 
-    @Test
-    public void test1test() throws Exception {
-        System.out.println("**************************************" + productImageService.test1test("test"));
-    }
+//    @Test
+//    public void test1test() throws Exception {
+//        System.out.println("**************************************" + productImageService.test1test("test"));
+//    }
 }

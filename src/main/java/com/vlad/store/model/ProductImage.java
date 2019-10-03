@@ -5,6 +5,7 @@ import com.vlad.store.model.util.EntityUtils;
 import lombok.*;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +42,6 @@ import static javax.persistence.FetchType.LAZY;
                         @ColumnResult(name = "pPrId", type = Long.class),
                         @ColumnResult(name = "pImgId", type = Long.class),
                         @ColumnResult(name = "pImgName", type = String.class),
-                        @ColumnResult(name = "pImgData", type = Integer.class)
                 }
         )}
 )
@@ -49,9 +49,9 @@ import static javax.persistence.FetchType.LAZY;
 // NB: parameter must be defined as ":product_name_part" and annotated in the repository method as @Param("product_name_part")
 @NamedNativeQueries({
         @NamedNativeQuery(name = "ProductImage.selectProductJoinProductImageDTO",
-        query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, " +
-                "tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData " +
-                "FROM find_product_product_images_id_by_product_name_part(:product_name_part) tst",
+        query = "SELECT ppi.p_id AS pId, ppi.p_name AS pName, ppi.p_producer_id AS pPrId, " +
+                "ppi.pimage_id AS pImgId, ppi.pimage_name AS pImgName " +
+                "FROM find_product_product_images_id_by_product_name_part(:product_name_part) ppi",
         resultSetMapping = "ProductImage.selectProductJoinProductImageDTO")
 })
 public class ProductImage {
@@ -84,6 +84,7 @@ public class ProductImage {
 
     @ToString.Exclude
     @Lob @Basic(fetch=LAZY)
+//    @Type(type="org.hibernate.type.PrimitiveByteArrayBlobType")
     @Column(name = "data")
     private byte[] data;
 

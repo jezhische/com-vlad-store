@@ -31,5 +31,5 @@ public interface ProductImageService {
 
 //    void findAllProductImageIdByProductName();
 
-//    List<ProductJoinProductImageDTO> test1test(String productNamePart);
+    List<ProductJoinProductImageDTO> selectProductJoinProductImageDTO(String productNamePart);
 }

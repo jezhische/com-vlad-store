@@ -18,13 +18,12 @@ import javax.persistence.*;
 public class ProductJoinProductImageDTO {
 
     public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
-                                      Long productImageId, String productImageName, Integer productImageDataOID) {
+                                      Long productImageId, String productImageName) {
         this.productId = productId;
         this.productName = productName;
         this.producerId = producerId;
         this.productImageId = productImageId;
         this.productImageName = productImageName;
-        this.productImageDataOID = productImageDataOID;
     }
 
     private Long productId;
@@ -32,5 +31,21 @@ public class ProductJoinProductImageDTO {
     private Long producerId;
     private Long productImageId;
     private String productImageName;
-    private Integer productImageDataOID;
+
+//    public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
+//                                      Long productImageId, String productImageName, Integer productImageDataOID) {
+//        this.productId = productId;
+//        this.productName = productName;
+//        this.producerId = producerId;
+//        this.productImageId = productImageId;
+//        this.productImageName = productImageName;
+//        this.productImageDataOID = productImageDataOID;
+//    }
+//
+//    private Long productId;
+//    private String productName;
+//    private Long producerId;
+//    private Long productImageId;
+//    private String productImageName;
+//    private Integer productImageDataOID;
 }
