@@ -30,12 +30,6 @@ public class ProductImageRepositoryTest extends BasePostgresConnectingTest {
 
     }
 
-//    @Test
-//    public void findAllByProductDetailsContainsProductNameOrderByData() throws Exception {
-//
-//    }
-
-
     @Test
     public void findDistinctProductImagesIdByProductNamePartOrderByDatetime() throws Exception {
         System.out.println("**********************************************************"
@@ -43,17 +37,8 @@ public class ProductImageRepositoryTest extends BasePostgresConnectingTest {
     }
 
     @Test
-    public void findProductJoinProductImagesIdByProductNamePart() {
+    public void selectProductJoinProductImageDTO() {
         System.out.println("**********************************************************" +
-//                repository.findProductJoinProductImagesIdByProductNamePart("test"));
-                repository.findProductJoinProductImagesIdByProductNamePart());
+                repository.selectProductJoinProductImageDTO("test"));
     }
-
-//    @Test
-//    public void test1() {
-//        Query nativeQuery = em.createNativeQuery("SELECT * FROM find_product_product_images_id_by_product_name_part('test')");
-//        List resultList = nativeQuery.getResultList();
-//        System.out.println("*********" + resultList);
-////        System.out.println(((ProductJoinProductImageDTO) resultList.get(0)));
-//    }
 }

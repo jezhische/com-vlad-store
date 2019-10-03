@@ -127,27 +127,6 @@ END
 
 -- ------------------------------------------------------------------------------------------------------------------
 
-DROP FUNCTION test1();
-
-CREATE OR REPLACE FUNCTION test1() RETURNS SETOF product_pimage AS
-'
-DECLARE
-  _result product_pimage;
-BEGIN
-
-  FOR _result.p_id, _result.p_name, _result.p_producer_id, _result.pimage_id, _result.pimage_name, _result.pimage_data IN
-    SELECT DISTINCT p.id, p.name, p.producer_id, pi.id, pi.file_name, pi.data
-                    FROM product_images pi
-                             INNER JOIN product_detail_product_image pd_pi on pi.id = pd_pi.product_image_id
-                             INNER JOIN product_details pd ON pd_pi.product_detail_id = pd.id
-                             INNER JOIN products p ON pd.product_id = p.id WHERE p.name ILIKE $$%test%$$
-  LOOP
-    RETURN NEXT _result;
-  END LOOP;
-  RETURN;
-END
-'
-  LANGUAGE plpgsql;
 
 -- ========================================================================================== test queries
 -- select c.login, r.role from customers c inner join customer_role cr on c.id = cr.customer_id inner join roles r on r.id = cr.role_id where c.login = ?
@@ -165,7 +144,6 @@ SELECT * FROM find_distinct_product_images_id_by_product_name_part_order_by_date
 
 SELECT * FROM find_product_product_images_id_by_product_name_part('test');
 
-SELECT * FROM test1();
 
 
 

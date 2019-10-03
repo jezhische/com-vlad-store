@@ -126,28 +126,37 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
 // ---------------------------------------------------------------------------------------------------------------------
-    @Autowired
-//    private EntityManagerFactory emf;
-        EntityManager entityManager;
+//    @Autowired
+////    private EntityManagerFactory emf;
+//        EntityManager entityManager;
+//
+//    @Override
+//    public void findAllProductImageIdByProductName() {
+////        EntityManager entityManager = emf.createEntityManager();
+//        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+//        Root<Product> root = criteriaQuery.from(Product.class);
+//        criteriaQuery.select(root);
+//        TypedQuery<Product> query = entityManager.createQuery(criteriaQuery);// qlString + Class resultClass
+//        List<Product> resultList = query.getResultList();
+//        resultList.forEach(result -> System.out.println("*************************************************** " + result));
+//    }
 
-    @Override
-    public void findAllProductImageIdByProductName() {
-//        EntityManager entityManager = emf.createEntityManager();
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
-        Root<Product> root = criteriaQuery.from(Product.class);
-        criteriaQuery.select(root);
-        TypedQuery<Product> query = entityManager.createQuery(criteriaQuery);// qlString + Class resultClass
-        List<Product> resultList = query.getResultList();
-        resultList.forEach(result -> System.out.println("*************************************************** " + result));
-    }
 
-
-    @Override
-    public List<ProductJoinProductImageDTO> test1test(String productNamePart) {
-        return entityManager.createNamedQuery("SelectProductJoinProductImageDTO", ProductJoinProductImageDTO.class)
-                .setParameter("product_name_part", productNamePart)
-                .getResultList();
-    }
+//    /**
+//     * returns result of the NamedNativeQuery "ProductImage.selectProductJoinProductImageDTO" defined
+//     * in the {@code ProductImage} class
+//     * @param productNamePart a part or a whole name of the product
+//     * @return  list of the query results as {@code ProductImageDTO} objects
+//     * @see ProductJoinProductImageDTO
+//     * @see ProductImage
+//     */
+//    @Override
+//    public List<ProductJoinProductImageDTO> test1test(String productNamePart) {
+//        // NB: this query creates a TypedQuery result. See ProductImage class for appropriate NamedNativeQuery
+//        return entityManager.createNamedQuery("ProductImage.selectProductJoinProductImageDTO", ProductJoinProductImageDTO.class)
+//                .setParameter("product_name_part", productNamePart)
+//                .getResultList();
+//    }
 
 }

@@ -21,8 +21,6 @@ public interface ProductImageService {
 
     List<ProductImage> findAllByProductDetails(Long productDetailId);
 
-//    List<ProductImage> findAllByProductDetailsContainsProductNameOrderByData(ProductDetail detail);
-
     List<ProductImage> findAll();
 
     List<ProductImage> findByFileName(String fileName);
@@ -31,7 +29,7 @@ public interface ProductImageService {
 
     void deleteById(Long id);
 
-    void findAllProductImageIdByProductName();
+//    void findAllProductImageIdByProductName();
 
-    List<ProductJoinProductImageDTO> test1test();
+//    List<ProductJoinProductImageDTO> test1test(String productNamePart);
 }

@@ -1,6 +1,7 @@
 package com.vlad.store.repository;
 
 import com.vlad.store.model.ProductImage;
+import com.vlad.store.model.dto.ProductImageDTO;
 import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NamedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,21 +30,21 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     List<ProductImage> findAllByProductDetails(Long productDetailId);
 
-
-//    List<ProductImage> findAllByProductNamePartOrderByDate(String productNamePart);
-
     List<ProductImage> findByFileName(String fileName);
 
     @Query(value = "SELECT * FROM find_distinct_product_images_id_by_product_name_part_order_by_datetime(?1)", nativeQuery = true)
     List<Long> findDistinctProductImagesIdByProductNamePartOrderByDatetime(String productNamePart);
 
-// see @NamedNativeQuery in the ProductJoinProductImageDTO.class
-    @Query(name = "join_result_find_product_product_images_id_by_product_name_part",
-//            value = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)",
-            value = "SELECT * FROM test1()",
-            nativeQuery = true)
-//    List<ProductJoinProductImageDTO> findProductJoinProductImagesIdByProductNamePart(/*@Param("param1")*/ String productNamePart);
-    List<Object> findProductJoinProductImagesIdByProductNamePart();
+    /**
+     * returns result of the NamedNativeQuery "{@code ProductImage.selectProductJoinProductImageDTO}" defined
+     * in the {@link ProductImage} class
+     * @param productNamePart a part or a whole name of the product
+     * @return list of the query results as {@link ProductJoinProductImageDTO} objects
+     * @see <a href="https://stackoverflow.com/questions/49056084/got-different-size-of-tuples-and-aliases-exception-after-spring-boot-2-0-0-rel">
+     * stackoverflow a "HibernateException: Got different size of tuples and aliases" issue resolving</a>
+     */
+    @Query(nativeQuery = true)
+    List<ProductJoinProductImageDTO> selectProductJoinProductImageDTO(@Param("product_name_part") String productNamePart);
 
 
 }

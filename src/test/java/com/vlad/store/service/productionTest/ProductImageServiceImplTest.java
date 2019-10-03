@@ -36,9 +36,9 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
     public void setUp() throws Exception {
         file = new File("src\\test\\java\\com\\vlad\\store\\testUtils\\" + FILENAME);
         update = new File("src\\test\\java\\com\\vlad\\store\\testUtils\\" + UPDATE_FILENAME);
-        System.out.println("******************************************************* file: " + file.getName() +
+        System.out.println("@Before: ******************************************************* file: " + file.getName() +
                 ", parent: " + file.getParent());
-        System.out.println("******************************************************* update: " + update.getName() +
+        System.out.println("@Before: ******************************************************* update: " + update.getName() +
                 ", parent: " + update.getParent());
         String fileName = file.getName();
         int threshold = ((int) file.length());
@@ -49,7 +49,7 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
         // to write file content to fileItem:
         IOUtils.copy(new FileInputStream(file), fileItem.getOutputStream());
         multipartFile = new CommonsMultipartFile(fileItem);
-        System.out.println("*********************** multipartFile.getBytes().length = " + multipartFile.getBytes().length);
+        System.out.println("@Before: *********************** multipartFile.getBytes().length = " + multipartFile.getBytes().length);
 
         fileName = update.getName();
         threshold = ((int) update.length());
@@ -60,7 +60,7 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
         // to write file content to fileItem:
         IOUtils.copy(new FileInputStream(update), fileItem.getOutputStream());
         update_multipartFile = new CommonsMultipartFile(fileItem);
-        System.out.println("*********************** update_multipartFile.getBytes().length = " + update_multipartFile.getSize());
+        System.out.println("@Before: *********************** update_multipartFile.getBytes().length = " + update_multipartFile.getSize());
     }
 
     @After
@@ -136,6 +136,6 @@ public class ProductImageServiceImplTest extends BasePostgresConnectingTest {
 
     @Test
     public void test1test() throws Exception {
-        System.out.println("**************************************" + productImageService.test1test());
+        System.out.println("**************************************" + productImageService.test1test("test"));
     }
 }

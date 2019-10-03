@@ -1,15 +1,20 @@
 package com.vlad.store.model.dto;
 
+import com.vlad.store.model.ProductImage;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
-// https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
+/**
+ * see {@link ProductImage} for query and result set mapping
+ * @see <a href="https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/">
+ *          https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
+ *     </a>
+ */
 @Data
 @Builder
-
 public class ProductJoinProductImageDTO {
 
     public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,

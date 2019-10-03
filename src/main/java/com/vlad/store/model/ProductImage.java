@@ -21,12 +21,18 @@ import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
 
+/**
+ * @see <a href="https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/">
+ *          vladmihalcea projection query tutorial</a><br>
+ * @see <a href="https://stackoverflow.com/questions/49056084/got-different-size-of-tuples-and-aliases-exception-after-spring-boot-2-0-0-rel">
+ *     stackoverflow correct code for @SqlResultSetMapping and a "HibernateException: Got different size of tuples
+ *     and aliases" issue resolving</a>
+ */
 @Data
 @Entity
 @Table(name = "product_images")
-// https://vladmihalcea.com/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
 @SqlResultSetMapping(
-        name = "SelectProductJoinProductImageDTO",
+        name = "ProductImage.selectProductJoinProductImageDTO",
         classes = {@ConstructorResult(
                 targetClass = ProductJoinProductImageDTO.class,
                 columns = {
@@ -37,17 +43,17 @@ import static javax.persistence.FetchType.LAZY;
                         @ColumnResult(name = "pImgName", type = String.class),
                         @ColumnResult(name = "pImgData", type = Integer.class)
                 }
-        )
-        }
+        )}
 )
-
-@NamedNativeQuery(name = "SelectProductJoinProductImageDTO",
-//        query = "SELECT * FROM find_product_product_images_id_by_product_name_part(?1)")
-//        query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData FROM test1() tst",
+// NB: as it's a JPQL, I must to define class for method as "ProductImage.selectPr....DTO"
+// NB: parameter must be defined as ":product_name_part" and annotated in the repository method as @Param("product_name_part")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "ProductImage.selectProductJoinProductImageDTO",
         query = "SELECT tst.p_id AS pId, tst.p_name AS pName, tst.p_producer_id AS pPrId, " +
                 "tst.pimage_id AS pImgId, tst.pimage_name AS pImgName, tst.pimage_data AS pImgData " +
-                "FROM find_product_product_images_id_by_product_name_part(?1) tst",
-        resultSetMapping = "SelectProductJoinProductImageDTO")
+                "FROM find_product_product_images_id_by_product_name_part(:product_name_part) tst",
+        resultSetMapping = "ProductImage.selectProductJoinProductImageDTO")
+})
 public class ProductImage {
 
     public ProductImage() {
