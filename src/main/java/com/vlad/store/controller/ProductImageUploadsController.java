@@ -3,6 +3,7 @@ package com.vlad.store.controller;
 import com.sun.org.apache.regexp.internal.RE;
 import com.vlad.store.model.ProductImage;
 import com.vlad.store.model.dto.ProductImageDTO;
+import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import com.vlad.store.model.dto.UploadedFileResponse;
 import com.vlad.store.service.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/product-images-uploads")
@@ -96,6 +99,22 @@ public class ProductImageUploadsController {
                                               @Autowired HttpServletRequest request) {
         return null;
     }
+
+    @GetMapping(value = "/product-join-product-images")
+    ResponseEntity<ProductImage> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
+                                                      @Autowired HttpServletRequest request) {
+        List<ProductJoinProductImageDTO> pJPIList = productImageService.selectProductJoinProductImageDTO(namePart);
+        // поскольку я пока не пользуюсь селектом, то когда я ввожу в поисковое поле часть имени,я получаю
+        // несколько продуктов, у каждого из которых может быть несколько картинок. То есть, я получаю
+        // несколько productJoinProductImageDTO с одним продуктом и разными картинками, несколько с другим
+        // и т.д. Поэтому для начала отсортируем по product.id
+        // lambda to get Comparator instance: Comparator.comparing(productJoinProductImageDTO -> productJoinProductImageDTO.getProductId())
+        pJPIList = pJPIList.stream()
+                .sorted(Comparator.comparing(ProductJoinProductImageDTO::getProductId))
+                .collect(Collectors.toList());
+        return null;
+    }
+
 
 //    @GetMapping(value = "/product-images/name", params = {"name"})
 //    public @ResponseBody
