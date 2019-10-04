@@ -89,8 +89,12 @@ public class ProductImageUploadsController {
         ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
                 .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
         return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
+                        + resource.getFileName() + "\"")
                 .body(resource);
     }
+
+
 
     ResponseEntity<ProductImage> getImagePreviousData(@PathVariable(value = "resourceId") Long resourceId,
                                               @Autowired HttpServletRequest request) {

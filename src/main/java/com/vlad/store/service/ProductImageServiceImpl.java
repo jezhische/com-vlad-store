@@ -41,17 +41,9 @@ public class ProductImageServiceImpl implements ProductImageService {
             if(fileName.contains("..")) {
                 throw new RuntimeException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-
 //            System.out.println("********************************************************************* + " +
 //                    "ProductImage saveFile(MultipartFile file): file.getContentType() = " + file.getContentType());
-            ProductImage image =
-//                    ProductImage.builder()
-//                    .fileName(fileName)
-//                    .fileType(file.getContentType())
-//                    .data(file.getBytes())
-//                    .build();
-                    new ProductImage(fileName, file.getContentType(), file.getBytes());
-
+            ProductImage image = new ProductImage(fileName, file.getContentType(), file.getBytes());
             return repository.saveAndFlush(image);
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
