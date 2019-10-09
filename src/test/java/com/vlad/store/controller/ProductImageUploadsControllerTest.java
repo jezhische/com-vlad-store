@@ -15,7 +15,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +51,7 @@ public class ProductImageUploadsControllerTest extends BasePostgresConnectingTes
 
     @Test
     @Rollback
-    public void addProductImageData() {
+    public void addProductImageData() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         int pdCount = 5;
         Product prod =
                 productService.save(Product.builder().name("testAddProductImageData")
@@ -65,10 +68,28 @@ public class ProductImageUploadsControllerTest extends BasePostgresConnectingTes
         }
         // select ProductJoinProductImageDTO by Product name part
         List<ProductJoinProductImageDTO> productJoinProductImageDTOList = productImageService.selectProductJoinProductImageDTO("test");
-        // get ProductImage ids from obtained objects
-        List<Long> productImageIdList = productJoinProductImageDTOList.stream()
-                .map(ProductJoinProductImageDTO::getProductImageId) // (item -> item.getProductImageId())
-                .collect(Collectors.toList());
+//        // get ProductImage ids from obtained objects
+//        List<Long> productImageIdList = productJoinProductImageDTOList.stream()
+//                .map(ProductJoinProductImageDTO::getProductImageId) // (item -> item.getProductImageId())
+//                .collect(Collectors.toList());
+        assertFalse(productJoinProductImageDTOList.size() == 0);
+        ProductJoinProductImageDTO any = productJoinProductImageDTOList.stream().findAny().get();
+        ProductImage imageById = productImageService.findById(any.getProductImageId()).orElse(new ProductImage());
+        // get private controller method with java.reflection
+        Method addProductImageData = controller.getClass()
+                .getDeclaredMethod("addProductImageData", ProductJoinProductImageDTO.class, HttpServletRequest.class);
+        addProductImageData.setAccessible(true);
+        Object invoke = addProductImageData.invoke(controller, any, null);
+        assertTrue(invoke.getClass().equals(ProductJoinProductImageDTO.class));
+        assertFalse(((ProductJoinProductImageDTO) invoke).getProductImageData().length == 0);
+        System.out.println("************************************************************* length: " + ((ProductJoinProductImageDTO) invoke).getProductImageData().length);
 
+    }
+
+    @Test
+    public void testPrimitive() throws Exception {
+        System.out.println((double) (200 / 629) * 558);
+        System.out.println(((double)200 / 629) * 558);
+        System.out.println((double)200 / 629 * 558);
     }
 }

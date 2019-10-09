@@ -154,8 +154,28 @@ $(function () {
     }
 // ---------------------------------------------------------------------------------------------------------
 
-    function showProductsByName(productName, containerId = 'find-product-container') {
-        let container = document.createElement(containerId);
+    function showProductImageByNamePart(productName, containerId = 'find-product-container') {
+        // let container = document.createElement(containerId);
+        // todo: to remove
+        console.log(productName);
+        let xhr = new XMLHttpRequest();
+        let url = new URL('product-images-uploads/product-join-product-images');
+        if (productName) url.searchParams.set('name-part', productName);
+        // fixme: add else
+        let table = document.querySelector('#' + imgDataTableId);
+        new Promise(function (resolve, reject) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                else if(xhr.status >= 200 && xhr.status < 300) resolve(xhr);
+                else reject({status: xhr.status, statustext: xhr.statusText})
+            };
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.timeout = 10000;
+            xhr.send();
+        }).then(resolve => {appendProductImageShowTableRow(table, resolve);});
+        // todo: to remove
+        console.log(resolve);
 
     }
 // ---------------------------------------------------------------------------------------------------------
@@ -251,6 +271,17 @@ $(function () {
                 let findImageByIdInput = document.querySelector('#find-image-by-id-input');
                 showProductImageById(findImageByIdInput.value);
                 findImageByIdInput.value = '';
+            };
+// find-image-by-name-form submit:
+        document.querySelector('#find-image-by-name-form').onsubmit =
+        // document.querySelector('#image-by-name-submit').onclick =
+            (event) => {
+                event.preventDefault();
+                let findImageByNameInput = document.querySelector('find-image-by-name-input');
+                // todo: to remove
+                console.log(findImageByNameInput.value + ' from document.querySelector(\'#find-image-by-name-form\').onsubmit');
+                showProductImageByNamePart(findImageByNameInput.value);
+                findImageByNameInput.value = '';
             };
     }
 // ------------------------------------------------------------------------------------------------------------

@@ -24,7 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Comparator;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/product-images-uploads")
 public class ProductImageUploadsController {
 
+    private static final int PREVIEW_IMAGE_WIDTH = 200;
     private ProductImageService productImageService;
 
     @Autowired
@@ -112,11 +115,12 @@ public class ProductImageUploadsController {
 //    }
 
     @GetMapping(value = "/product-join-product-images")
-    ResponseEntity<ProductImage> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
+    ResponseEntity<List<ProductJoinProductImageDTO>> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
                                                       @Autowired HttpServletRequest request) {
+        return ResponseEntity.ok(
 // get list of ProductJoinProductImageDTO instances
-        List<ProductJoinProductImageDTO> pJPIList =
-                productImageService.selectProductJoinProductImageDTO(namePart).stream()
+                productImageService.selectProductJoinProductImageDTO(namePart)
+                        .stream()
 // as the result from the search input may be only a part of the product name, the request result gives me
 // a list of productJoinProductImageDTO, and some items from this list could contain the same product
 // with different image ids, while other ones could contain other product with several image ids.
@@ -130,8 +134,8 @@ public class ProductImageUploadsController {
 // R apply(T t) throws E method implemented as addProductImageData() method, and in turn applyUnchecked() method
 // creates new Function instance.
                         .map(ThrowingFunction.applyUnchecked(item -> addProductImageData(item, request)))
-                        .collect(Collectors.toList());
-        return null;
+                        .collect(Collectors.toList())
+        );
     }
 
 // ====================================================================================================== U T I L
@@ -146,16 +150,16 @@ public class ProductImageUploadsController {
      */
     private ProductJoinProductImageDTO addProductImageData(ProductJoinProductImageDTO item, HttpServletRequest request)
             throws NoHandlerFoundException, IOException {
-        int resizedWidth = 200;
-        byte[] rowImageData = productImageService.findById(item.getProductImageId())
-                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY))
-                .getData();
+        ProductImage productImage = productImageService.findById(item.getProductImageId())
+                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY));
         // resize image
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(rowImageData));
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(productImage.getData()));
         BufferedImage resized = new BufferedImage(
-                resizedWidth, resizedWidth / image.getWidth() * image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                PREVIEW_IMAGE_WIDTH,  (int)((double) PREVIEW_IMAGE_WIDTH / image.getWidth() * image.getHeight()), BufferedImage.TYPE_INT_ARGB);
         // get byte[] from resized image and set it to ProductJoinProductImageDTO instance
-        item.setProductImageData(((DataBufferByte) resized.getData().getDataBuffer()).getData());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resized, productImage.getFileType(), baos);
+        item.setProductImageData(baos.toByteArray());
         return item;
     }
 
