@@ -19,11 +19,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
@@ -99,24 +106,93 @@ public class ProductImageUploadsController {
 
 
 
-    ResponseEntity<ProductImage> getImagePreviousData(@PathVariable(value = "resourceId") Long resourceId,
-                                              @Autowired HttpServletRequest request) {
-        return null;
-    }
+//    ResponseEntity<ProductImage> getImagePreviewData(@PathVariable(value = "resourceId") Long resourceId,
+//                                              @Autowired HttpServletRequest request) {
+//        return null;
+//    }
 
     @GetMapping(value = "/product-join-product-images")
     ResponseEntity<ProductImage> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
                                                       @Autowired HttpServletRequest request) {
-        List<ProductJoinProductImageDTO> pJPIList = productImageService.selectProductJoinProductImageDTO(namePart);
-        // поскольку я пока не пользуюсь селектом, то когда я ввожу в поисковое поле часть имени,я получаю
-        // несколько продуктов, у каждого из которых может быть несколько картинок. То есть, я получаю
-        // несколько productJoinProductImageDTO с одним продуктом и разными картинками, несколько с другим
-        // и т.д. Поэтому для начала отсортируем по product.id
-        // lambda to get Comparator instance: Comparator.comparing(productJoinProductImageDTO -> productJoinProductImageDTO.getProductId())
-        pJPIList = pJPIList.stream()
-                .sorted(Comparator.comparing(ProductJoinProductImageDTO::getProductId))
-                .collect(Collectors.toList());
+// get list of ProductJoinProductImageDTO instances
+        List<ProductJoinProductImageDTO> pJPIList =
+                productImageService.selectProductJoinProductImageDTO(namePart).stream()
+// as the result from the search input may be only a part of the product name, the request result gives me
+// a list of productJoinProductImageDTO, and some items from this list could contain the same product
+// with different image ids, while other ones could contain other product with several image ids.
+// So first I need to sort result list by products
+                        .sorted(Comparator.comparing(ProductJoinProductImageDTO::getProductId))
+// then add for each item byte[] productImageData with addProductImageData(). As that method throws exception, I
+// need to create wrapper for map(Function f) argument, consider to name it ThrowingFunction.
+// NB: ThrowingFunction.applyUnchecked() takes to parameters
+// new ThrowingFunction<ProductJoinProductImageDTO, ProductJoinProductImageDTO, Throwable>() {...}
+// So lambda item -> addProductImageData(item, request) creates new ThrowingFunction instance with its
+// R apply(T t) throws E method implemented as addProductImageData() method, and in turn applyUnchecked() method
+// creates new Function instance.
+                        .map(ThrowingFunction.applyUnchecked(item -> addProductImageData(item, request)))
+                        .collect(Collectors.toList());
         return null;
+    }
+
+// ====================================================================================================== U T I L
+
+    /**
+     * get ProductImage by id from ProductJoinProductImageDTO item, then resize it for preview and add to the item
+     * @param item ProductImage that handled here
+     * @param request
+     * @return
+     * @throws NoHandlerFoundException
+     * @throws IOException
+     */
+    private ProductJoinProductImageDTO addProductImageData(ProductJoinProductImageDTO item, HttpServletRequest request)
+            throws NoHandlerFoundException, IOException {
+        int resizedWidth = 200;
+        byte[] rowImageData = productImageService.findById(item.getProductImageId())
+                .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY))
+                .getData();
+        // resize image
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(rowImageData));
+        BufferedImage resized = new BufferedImage(
+                resizedWidth, resizedWidth / image.getWidth() * image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        // get byte[] from resized image and set it to ProductJoinProductImageDTO instance
+        item.setProductImageData(((DataBufferByte) resized.getData().getDataBuffer()).getData());
+        return item;
+    }
+
+    /**
+     * A wrapper to create {@link Function} instance with exception handling.
+     * Represents a function that accepts one argument and produces a result, so
+     * this is a functional interface whose functional method is {@link #apply(Object)} throws {@link Throwable}.
+     * @param <T> the type of the input to the function
+     * @param <R> the type of the result of the function
+     * @param <E> the type of the exception handled in {@link #applyUnchecked(ThrowingFunction)}
+     * @see <a href=https://dzone.com/articles/how-to-handle-checked-exception-in-lambda-expressi>
+     *     How to Handle Checked Exceptions With Lambda Expression</a>
+     * @see "task.txt"
+     */
+    @FunctionalInterface
+    interface ThrowingFunction<T, R, E extends Throwable> {
+        R apply(T t) throws E;
+
+        /**
+         * create a {@link Function} instance and handle checked Exception by throwing an unchecked one.
+         * @param f
+         * @param <T>
+         * @param <R>
+         * @param <E>
+         * @return new Function instance with its R apply(T t) method implemented as R apply(T t) throws E
+         */
+        static <T, R, E extends Throwable> Function<T, R> applyUnchecked(ThrowingFunction<T, R, E> f) {
+// create Function instance by implementation of its R apply(T t) method.
+// NB: this equals a following expression: return new Function<T, R>(){@Override  public R apply(T t){...return f.apply(t);...}}
+            return t -> {
+                try {
+                    return f.apply(t);
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        }
     }
 
 

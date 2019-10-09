@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 /**
  * see {@link ProductImage} for query and result set mapping
@@ -43,7 +44,18 @@ public class ProductJoinProductImageDTO {
     private String productImageName;
     private byte[] productImageData;
 
-//    public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
+    @Override
+    public String toString() {
+        return "ProductJoinProductImageDTO{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", producerId=" + producerId +
+                ", productImageId=" + productImageId +
+                ", productImageName='" + productImageName + '\'' +
+                ", productImageData length= " + productImageData.length;
+    }
+
+    //    public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
 //                                      Long productImageId, String productImageName, Integer productImageDataOID) {
 //        this.productId = productId;
 //        this.productName = productName;

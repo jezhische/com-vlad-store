@@ -1,5 +1,7 @@
 package com.vlad.store.testUtils;
 
+import com.vlad.store.model.ProductDetail;
+
 import java.math.BigDecimal;
 import java.util.Random;
 
@@ -26,5 +28,14 @@ public class TestUtil {
 
     public static int generateRandomSize() {
         return 30 + (int) (Math.random() * 40);
+    }
+
+    public static ProductDetail getProductDetail() {
+        return ProductDetail.builder()
+                .size(TestUtil.generateRandomSize())
+                .color(TestUtil.generateRandomName())
+                .available(true)
+                .price(TestUtil.generateRandomPrice())
+                .build();
     }
 }

@@ -1,0 +1,20 @@
+ProductImageUploadsController
+@GetMapping(value = "/product-join-product-images")
+    ResponseEntity<ProductImage> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
+                                                      @Autowired HttpServletRequest request) {
+        ........ .map()
+    }
+В методе map() у меня должно происходить следующее: берем каждый экземпляр полученного списка
+(а это ProductJoinProductImageDTO) и обрабатываем с поомощью addProductImageData(), который добавляет к каждому
+экземпляру ProductJoinProductImageDTO байтовый массив с картинкой и возвращает его же.
+map() принимает в параметры экземпляр Function, и здесь у меня функциональный метод R apply(T t) редуцируется до R apply(R r).
+Поскольку у меня метод addProductImageData() бросает NoHandlerFoundException, я создам экземпляр Function
+с помощью статического метода функционального интерфейса ThrowingFunction (этот интерфейс я создал ниже):
+static <T, R, E extends Throwable> Function<T, R> applyUnchecked(ThrowingFunction<T, R, E> f)
+То есть, если развернуть лямбду в анонимный класс, это выглядит так:
+ThrowingFunction.applyUnchecked(new ThrowingFunction<ProductJoinProductImageDTO, ProductJoinProductImageDTO, Throwable>() {
+    @Override
+    public ProductJoinProductImageDTO apply(ProductJoinProductImageDTO productJoinProductImageDTO) throws Throwable {
+        return null;
+    }
+})
