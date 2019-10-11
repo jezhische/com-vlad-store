@@ -1,10 +1,9 @@
 package com.vlad.store.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
 import com.vlad.store.model.ProductImage;
-import com.vlad.store.model.dto.ProductImageDTO;
 import com.vlad.store.model.dto.ProductJoinProductImageDTO;
 import com.vlad.store.model.dto.UploadedFileResponse;
+import com.vlad.store.model.util.ControllerUtils;
 import com.vlad.store.service.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -19,19 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,7 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/product-images-uploads")
 public class ProductImageUploadsController {
 
-    private static final int PREVIEW_IMAGE_WIDTH = 200;
+    private static final int PREVIEW_IMAGE_HEIGHT = 200;
     private ProductImageService productImageService;
 
     @Autowired
@@ -141,10 +132,11 @@ public class ProductImageUploadsController {
 // ====================================================================================================== U T I L
 
     /**
-     * get ProductImage by id from ProductJoinProductImageDTO item, then resize it for preview and add to the item
-     * @param item ProductImage that handled here
+     * get {@code ProductImage} instance by id from {@code ProductJoinProductImageDTO item},
+     * then resize it for preview and set to the item
+     * @param item {@code ProductJoinProductImageDTO} instance that handled here
      * @param request
-     * @return
+     * @return set {@code fileType} and {@code productImageData} fields to {@code ProductJoinProductImageDTO item} and return it
      * @throws NoHandlerFoundException
      * @throws IOException
      */
@@ -152,14 +144,14 @@ public class ProductImageUploadsController {
             throws NoHandlerFoundException, IOException {
         ProductImage productImage = productImageService.findById(item.getProductImageId())
                 .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY));
-        // resize image
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(productImage.getData()));
-        BufferedImage resized = new BufferedImage(
-                PREVIEW_IMAGE_WIDTH,  (int)((double) PREVIEW_IMAGE_WIDTH / image.getWidth() * image.getHeight()), BufferedImage.TYPE_INT_ARGB);
-        // get byte[] from resized image and set it to ProductJoinProductImageDTO instance
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(resized, productImage.getFileType(), baos);
-        item.setProductImageData(baos.toByteArray());
+// get fileType and set it to ProductJoinProductImageDTO instance
+        String fileType = productImage.getFileType();
+        item.setFileType(fileType);
+// get image data from db, resize image and set scaled image data to ProductJoinProductImageDTO instance
+        item.setProductImageData(
+                ControllerUtils.scaleImageFromByteArray(productImage.getData(), fileType, PREVIEW_IMAGE_HEIGHT)
+        );
+
         return item;
     }
 

@@ -18,14 +18,15 @@ import java.util.Arrays;
 @Builder
 public class ProductJoinProductImageDTO {
 
-    public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
-                                      Long productImageId, String productImageName, byte[] productImageData) {
+    public ProductJoinProductImageDTO(Long productId, String productName, Long producerId, Long productImageId,
+                                      String productImageName, byte[] productImageData, String fileType) {
         this.productId = productId;
         this.productName = productName;
         this.producerId = producerId;
         this.productImageId = productImageId;
         this.productImageName = productImageName;
         this.productImageData = productImageData;
+        this.fileType = fileType;
     }
 
     public ProductJoinProductImageDTO(Long productId, String productName, Long producerId,
@@ -43,6 +44,7 @@ public class ProductJoinProductImageDTO {
     private Long productImageId;
     private String productImageName;
     private byte[] productImageData;
+    private String fileType;
 
     @Override
     public String toString() {

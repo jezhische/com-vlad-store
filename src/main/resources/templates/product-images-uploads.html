@@ -82,6 +82,9 @@ ajax success sets img src="fileHref", kind of src="product-images-uploads/downlo
     <form id="find-product-form" class="find-product-form">
         <fieldset>
             <legend>product search</legend>
+            <div id="name-not-found-error" class="error-text" style="display: none">
+                Please type either product name or name part
+            </div>
             <label for="find-product-input" class="find-product-form">find product by name</label>
             <input id="find-product-input" type="text" placeholder="enter product name" class="find-product-form find-product-input"/>
             <button type="submit">Search</button>

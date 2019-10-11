@@ -72,7 +72,7 @@ public class ProductImageUploadsControllerTest extends BasePostgresConnectingTes
 //        List<Long> productImageIdList = productJoinProductImageDTOList.stream()
 //                .map(ProductJoinProductImageDTO::getProductImageId) // (item -> item.getProductImageId())
 //                .collect(Collectors.toList());
-        assertFalse(productJoinProductImageDTOList.size() == 0);
+        assertNotEquals(0, productJoinProductImageDTOList.size());
         ProductJoinProductImageDTO any = productJoinProductImageDTOList.stream().findAny().get();
         ProductImage imageById = productImageService.findById(any.getProductImageId()).orElse(new ProductImage());
         // get private controller method with java.reflection
@@ -80,9 +80,14 @@ public class ProductImageUploadsControllerTest extends BasePostgresConnectingTes
                 .getDeclaredMethod("addProductImageData", ProductJoinProductImageDTO.class, HttpServletRequest.class);
         addProductImageData.setAccessible(true);
         Object invoke = addProductImageData.invoke(controller, any, null);
-        assertTrue(invoke.getClass().equals(ProductJoinProductImageDTO.class));
-        assertFalse(((ProductJoinProductImageDTO) invoke).getProductImageData().length == 0);
-        System.out.println("************************************************************* length: " + ((ProductJoinProductImageDTO) invoke).getProductImageData().length);
+        assertEquals(invoke.getClass(), ProductJoinProductImageDTO.class);
+        assertNotEquals(0, ((ProductJoinProductImageDTO) invoke).getProductImageData().length);
+        // todo: NB: condition can be false because of the original image height can be less or equals 200px,
+        //  so it can be less or equals height of the scaled image
+        assertTrue(imageById.getData().length > ((ProductJoinProductImageDTO) invoke).getProductImageData().length);
+
+        System.out.println("************************************************************* imageById length: " + imageById.getData().length);
+        System.out.println("************************************************************* invoke length: " + ((ProductJoinProductImageDTO) invoke).getProductImageData().length);
 
     }
 

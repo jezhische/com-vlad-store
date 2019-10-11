@@ -156,7 +156,7 @@ $(function () {
 
     // TODO: to finish
     function showProductImageByName(productName, imgDataTableId = 'show-product-images-table',
-                                        containerId = 'find-product-container') {
+                                        containerId = 'find-image-container') {
         // let container = document.createElement(containerId);
     }
 
@@ -225,15 +225,7 @@ $(function () {
          let imgTd = document.createElement('td');
          imgTd.append(img);
          tr.append(imgTd);
- // create 'hide' button to remove the current table row
-        let hideBtn = document.createElement('input');
-        hideBtn.type = 'submit';
-        hideBtn.value = 'hide';
-        // hideBtn.classList.add('hide-product-img-row');
-        hideBtn.onclick = (event) => {
-            event.preventDefault();
-            hideBtn.parentElement.parentElement.innerHTML = '';
-        };
+        let hideBtn = getHideButton();
         let hideTd = document.createElement('td');
         hideTd.append(hideBtn);
         tr.append(hideTd);
@@ -243,11 +235,11 @@ $(function () {
     // ---------------------------------------------------------------------------------------------------------
 
     function showProductJoinProductImageByNamePart(productName, dataTableId = 'show-product-join-images-table',
-                                            containerId = 'find-product-container') {
-        // let container = document.createElement(containerId);
+                                                   formId = 'find-product-form') {
         // todo: to remove
         console.log(productName);
-        let xhr = new XMLHttpRequest();
+
+        let form = document.querySelector('#' + formId);
         // let url = new URL('http://localhost:8081/store/product-images-uploads/product-join-product-images');
         // if (productName) url.searchParams.set('name-part', productName);
         // todo: make constants from url's (and put to the script beginning)
@@ -256,28 +248,37 @@ $(function () {
 
         let table = document.querySelector('#' + dataTableId);
         new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState !== 4) return;
-                else if(xhr.status >= 200 && xhr.status < 300) resolve(xhr);
+                else if(xhr.status >= 200 && xhr.status < 300) resolve(xhr.response);
                 else reject({status: xhr.status, statustext: xhr.statusText})
             };
+            // xhr.onload = function() {
+            //     let response = xhr.response;
+            //     console.log('productImageName: ' + response['productImageName']);
+            //     resolve(response);}
             xhr.open('GET', url, true);
             xhr.responseType = 'json';
             xhr.timeout = 10000;
             xhr.send();
-        }).then(resolve => {appendProductJoinProductImageShowTableRow(table, resolve);});
+// since result is array of json objects
+            // todo: add catch() clause
+        }).then(resolve => resolve.forEach(item => appendProductJoinProductImageShowTableRow(table, item)))
+            .then(() => // after table row appended or error text displayed, move the form field to the bottom position (arg false)
+                form.scrollIntoView(false));
     }
 // ------------------------------------------------------------------------------------------------------------
 
     /**
      * create table with headers row to render results of request of a ProductJoinProductImage instance
-     * @param containerId
+     * @param formId
      * @param dataTableId
      * @return {HTMLElement}
      */
-    function createProductJoinProductImageShowTable(containerId = 'find-product-container',
+    function createProductJoinProductImageShowTable(formId = 'find-product-form',
                                          dataTableId = 'show-product-join-images-table') {
-        let container = document.querySelector('#' + containerId);
+        let form = document.querySelector('#' + formId);
         let table = document.createElement('table'),
             thead = document.createElement('thead'),
             tbody = document.createElement('tbody');
@@ -291,7 +292,8 @@ $(function () {
         }
         table.append(thead);
         table.append(tbody);
-        container.append(table);
+        // container.append(table);
+        form.before(table);
         return table;
     }
     // ------------------------------------------------------------------------------------------------------------
@@ -305,37 +307,43 @@ $(function () {
             let tbody = table.children[1];
             let tr = document.createElement('tr'),
             img = document.createElement('img');
-            // an array with obtainedData properties names to convenient adding table data
+            // create array with obtainedData properties names to convenient adding table data
             let properties = ['productId', 'productName', 'producerId', 'productImageId', 'productImageName'];
             for (let i = 0; i < properties.length; i++) {
                 let td = document.createElement('td');
                 td.innerHTML = obtainedData[properties[i]];
                 tr.append(td);
             }
-    // https://stackoverflow.com/questions/20756042/javascript-how-to-display-image-from-byte-array-using-javascript-or-servlet
-    //        img.src = "data:image/jpeg;base64," + obtainedData['data'];
-            // get image data not from database src, but directly from obtained byte array (that is 'data' property
-            // of obtained ProductImage JSON object)
-            img.src = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['data'];
+            // get productImage
+            console.log(obtainedData['productImageData']);
+            img.src = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['productImageData'];
             img.alt = obtainedData.fileName;
             img.classList.add('img-table-cell');
              let imgTd = document.createElement('td');
              imgTd.append(img);
              tr.append(imgTd);
-     // create 'hide' button to remove the current table row
-            let hideBtn = document.createElement('input');
-            hideBtn.type = 'submit';
-            hideBtn.value = 'hide';
-            // hideBtn.classList.add('hide-product-img-row');
-            hideBtn.onclick = (event) => {
-                event.preventDefault();
-                hideBtn.parentElement.parentElement.innerHTML = '';
-            };
+            let hideBtn = getHideButton();
             let hideTd = document.createElement('td');
             hideTd.append(hideBtn);
             tr.append(hideTd);
             tbody.append(tr);
         }
+// ------------------------------------------------------------------------------------------------------------
+
+    /**
+     * create 'hide' button to remove the current table row
+     */
+    function getHideButton() {
+        let hideBtn = document.createElement('input');
+        hideBtn.type = 'submit';
+        hideBtn.value = 'hide';
+        // hideBtn.classList.add('hide-product-img-row');
+        hideBtn.onclick = (event) => {
+            event.preventDefault();
+            hideBtn.parentElement.parentElement.innerHTML = '';
+        };
+        return hideBtn;
+    }
 // ------------------------------------------------------------------------------------------------------------
 
     function doSubmits() {
@@ -371,8 +379,7 @@ $(function () {
         uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
             'singleFileUploadSuccess', 'singleFileUploadError', 'uploadFileImg');
         createProductImageShowTable('find-image-container', 'show-product-images-table');
-        createProductJoinProductImageShowTable(containerId = 'find-product-container',
-            dataTableId = 'show-product-join-images-table');
+        createProductJoinProductImageShowTable('find-product-form', 'show-product-join-images-table');
         doSubmits();
     }
 // ------------------------------------------------------------------------------------------------------------
