@@ -79,7 +79,7 @@ public class ProductImageUploadsController {
         ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
                 .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(resource.getFileType()))
+//                .contentType(MediaType.parseMediaType(resource.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
                         + resource.getFileName() + "\"")
                 .body(new ByteArrayResource(resource.getData()));
@@ -88,10 +88,14 @@ public class ProductImageUploadsController {
     @GetMapping(value = "/product-images/{resourceId}")
     public @ResponseBody
     ResponseEntity<ProductImage> getImageData(@PathVariable(value = "resourceId") Long resourceId,
-                                                 @Autowired HttpServletRequest request)
-            throws NoHandlerFoundException {
+                                              @RequestParam(name = "preview", defaultValue = "false") Boolean preview,
+                                              @Autowired HttpServletRequest request)
+            throws NoHandlerFoundException, IOException {
         ProductImage resource = productImageService.findById(resourceId) // returns Optional<ProductImage>
                 .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY)); // returns ProductImage
+        if (preview) resource.setData(
+                ControllerUtils.scaleImageFromByteArray(resource.getData(), resource.getFileType(), PREVIEW_IMAGE_HEIGHT)
+        );
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = "
                         + resource.getFileName() + "\"")
@@ -99,24 +103,19 @@ public class ProductImageUploadsController {
     }
 
 
-
-//    ResponseEntity<ProductImage> getImagePreviewData(@PathVariable(value = "resourceId") Long resourceId,
-//                                              @Autowired HttpServletRequest request) {
-//        return null;
-//    }
-
     @GetMapping(value = "/product-join-product-images")
     ResponseEntity<List<ProductJoinProductImageDTO>> getProductJoinProductImageDTO(@RequestParam(name = "name-part") String namePart,
-                                                      @Autowired HttpServletRequest request) {
-        return ResponseEntity.ok(
-// get list of ProductJoinProductImageDTO instances
-                productImageService.selectProductJoinProductImageDTO(namePart)
-                        .stream()
+                                                      @Autowired HttpServletRequest request) throws NoHandlerFoundException {
+        try {
+            // get list of ProductJoinProductImageDTO instances
+            List<ProductJoinProductImageDTO> productJoinProductImageDTOList =
+                    productImageService.selectProductJoinProductImageDTO(namePart)
+                    .stream()
 // as the result from the search input may be only a part of the product name, the request result gives me
 // a list of productJoinProductImageDTO, and some items from this list could contain the same product
 // with different image ids, while other ones could contain other product with several image ids.
 // So first I need to sort result list by products
-                        .sorted(Comparator.comparing(ProductJoinProductImageDTO::getProductId))
+                    .sorted(Comparator.comparing(ProductJoinProductImageDTO::getProductId))
 // then add for each item byte[] productImageData with addProductImageData(). As that method throws exception, I
 // need to create wrapper for map(Function f) argument, consider to name it ThrowingFunction.
 // NB: ThrowingFunction.applyUnchecked() takes to parameters
@@ -124,9 +123,14 @@ public class ProductImageUploadsController {
 // So lambda item -> addProductImageData(item, request) creates new ThrowingFunction instance with its
 // R apply(T t) throws E method implemented as addProductImageData() method, and in turn applyUnchecked() method
 // creates new Function instance.
-                        .map(ThrowingFunction.applyUnchecked(item -> addProductImageData(item, request)))
-                        .collect(Collectors.toList())
-        );
+                    .map(ThrowingFunction.applyUnchecked(item -> addProductImageData(item, request)))
+                    .collect(Collectors.toList());
+            if (productJoinProductImageDTOList.size() == 0)
+                throw new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY);
+            return ResponseEntity.ok(productJoinProductImageDTOList);
+        } catch (RuntimeException e) {
+            throw new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY);
+        }
     }
 
 // ====================================================================================================== U T I L
@@ -146,6 +150,7 @@ public class ProductImageUploadsController {
                 .orElseThrow(() -> new NoHandlerFoundException("get", request.getRequestURL().toString(), HttpHeaders.EMPTY));
 // get fileType and set it to ProductJoinProductImageDTO instance
         String fileType = productImage.getFileType();
+//        if(fileType.substring(0, 6).matches("image/")) fileType = fileType.substring(6);
         item.setFileType(fileType);
 // get image data from db, resize image and set scaled image data to ProductJoinProductImageDTO instance
         item.setProductImageData(

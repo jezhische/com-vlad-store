@@ -1,5 +1,6 @@
 package com.vlad.store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -43,8 +44,13 @@ public class ProductDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    // lombok @RequiredArgsConstructor generates constructor for all final or @NonNull fields
-//    @NonNull
+    // when I get ProductImage instance with productDetails.size() != 0, and simultaneously
+// в общем, когда я получаю образец ProductImage, у которого есть ссылки на productDetail в сете productDetails, то
+// кроме прочих полей, Jackson пыьается сериализовать также это поле. А если при этом ссылки на product нет, то вместо
+// образца класса Product он получает образец класса org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer, для
+// которого у меня нет сериалайзера, в результате получаю InvalidDefinitionException. Так что исключу это поле пока что
+// из сериализации
+    @JsonIgnore
     private /*final*/ Product product;
 
     /**
@@ -55,6 +61,7 @@ public class ProductDetail {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // fetch = FetchType.LAZY by default
     @JoinTable(name = "product_detail_product_image", joinColumns = @JoinColumn(name = "product_detail_id"),
     inverseJoinColumns = @JoinColumn(name = "product_image_id"))
+    @JsonIgnore
     private Set<ProductImage> productImages;
 
 // NB: if ProductImage image object is non-persisted, I'll get

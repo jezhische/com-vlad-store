@@ -2,6 +2,10 @@ $(function () {
 
 // ==================================================================================
 
+    const MODAL = document.querySelector('.modal');
+    const PRODUCT_JOIN_PRODUCT_IMAGES_URL = 'product-images-uploads/product-join-product-images';
+// ==================================================================================
+
 // HTML PAGE "product-images-uploads.html"
 // SERVER: ProductImageUploadsController: uploadsTest(),
 // GET url: "product-images-uploads/test"
@@ -85,21 +89,6 @@ $(function () {
         })
     }
 
-// ---------------------------------------------------------------------------------------------------------
-
-    function findProductImageById(input = 'find-image-by-id-input') {
-        let inputElem = document.querySelector(input);
-        let id = Number.parseInt(inputElem.value, 10);
-        let parent = inputElem.getParent();
-        let errorTxt = document.createElement('div');
-        errorTxt.classList.add('error-text');
-        if (!imgId) {
-            errorTxt.innerHTML = 'Please type number id';
-            parent.prepend(errorTxt);
-            return;
-        }
-        return null;
-    }
 // ------------------------------------------------------------------------------------------------------------
 
     /**
@@ -131,14 +120,17 @@ $(function () {
         // send request:
         $.ajax({
             type: 'GET',
-            url: 'product-images-uploads/product-images/' + imgId,
+            url: `product-images-uploads/product-images/${imgId}`,
             dataType: 'json',
             success: function (obtainedData, status, jqXHR) {
                 // append table row with image and image details by the following function:
                 if (jqXHR.status >= 200 && jqXHR.status < 300) appendProductImageShowTableRow(table, obtainedData);
 // FIXME: why else clause do not work?
-                else if (jqXHR.status == 404) {
+                else if (jqXHR.status === 404) {
                     numberParseErrorTxt.innerHTML += '404: image not found';
+                    numberParseErrorTxt.style.display = 'block';
+                } else if(jqXHR.status >= 500) {
+                    numberParseErrorTxt.innerHTML += `Server Error occured: ${jqXHR.status}: ${jqXHR.statusText}`;
                     numberParseErrorTxt.style.display = 'block';
                 } else {
                     numberParseErrorTxt.innerHTML += `Error occured: ${jqXHR.status}: ${jqXHR.statusText}`;
@@ -162,15 +154,6 @@ $(function () {
 
 // ---------------------------------------------------------------------------------------------------------
 
-    // function showProductImagesByPage(page) {
-    //     let container = document.getElementById('find-image-container');
-    //     let table = document.createElement('table');
-    //     // table.classList.add('');
-    //
-    // }
-
-// ==================================================================================================== U T I L
-
     /**
      * create table with headers row to render results of ajax request of a ProductImage instance
      * @param containerId
@@ -185,7 +168,7 @@ $(function () {
             tbody = document.createElement('tbody');
         table.id = imgDataTableId;
 // create and append table headers
-        let headers = ['image id', 'image name', 'image type', 'image', 'hide'];
+        let headers = ['image id', 'image name', 'image type', 'product details id', 'image', 'hide'];
         for (let i = 0; i < headers.length; i++) {
             let th = document.createElement('th');
             th.innerHTML = headers[i];
@@ -215,6 +198,10 @@ $(function () {
             td.innerHTML = obtainedData[properties[i]];
             tr.append(td);
         }
+        let td = document.createElement('td');
+        let pDetailsId = obtainedData['productDetails'].map(item => item['id']);
+        td.innerHTML = pDetailsId.join(', ');
+        tr.append(td);
 // https://stackoverflow.com/questions/20756042/javascript-how-to-display-image-from-byte-array-using-javascript-or-servlet
 //        img.src = "data:image/jpeg;base64," + obtainedData['data'];
         // get image data not from database src, but directly from obtained byte array (that is 'data' property
@@ -222,9 +209,11 @@ $(function () {
         img.src = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['data'];
         img.alt = obtainedData.fileName;
         img.classList.add('img-table-cell');
+        img.style.cursor = 'pointer';
          let imgTd = document.createElement('td');
          imgTd.append(img);
          tr.append(imgTd);
+
         let hideBtn = getHideButton();
         let hideTd = document.createElement('td');
         hideTd.append(hideBtn);
@@ -236,37 +225,41 @@ $(function () {
 
     function showProductJoinProductImageByNamePart(productName, dataTableId = 'show-product-join-images-table',
                                                    formId = 'find-product-form') {
-        // todo: to remove
-        console.log(productName);
-
         let form = document.querySelector('#' + formId);
+        let errorText = document.querySelector('#product-join-image-error');
+        errorText.style.display = 'none';
         // let url = new URL('http://localhost:8081/store/product-images-uploads/product-join-product-images');
         // if (productName) url.searchParams.set('name-part', productName);
-        // todo: make constants from url's (and put to the script beginning)
-        let url = !!productName ? 'product-images-uploads/product-join-product-images?name-part=' + productName
-            : 'product-images-uploads/product-join-product-images'; // fixme: here must be reference to error page or something like
-
+        let url;
+        if (!productName || productName.trim() === '') {
+            errorText.innerHTML = 'Please put product name or name part';
+            errorText.style.display = 'block';
+            form.scrollIntoView(false);
+            return;
+        } else {
+            url = `${PRODUCT_JOIN_PRODUCT_IMAGES_URL}?name-part=${productName.trim()}`;
+        }
         let table = document.querySelector('#' + dataTableId);
         new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState !== 4) return;
-                else if(xhr.status >= 200 && xhr.status < 300) resolve(xhr.response);
-                else reject({status: xhr.status, statustext: xhr.statusText})
-            };
-            // xhr.onload = function() {
-            //     let response = xhr.response;
-            //     console.log('productImageName: ' + response['productImageName']);
-            //     resolve(response);}
             xhr.open('GET', url, true);
             xhr.responseType = 'json';
             xhr.timeout = 10000;
+            xhr.onload = function() {
+                if(xhr.status >= 200 && xhr.status < 300) resolve(xhr.response);
+                else reject({status: xhr.status, statustext: xhr.statusText});
+            };
+            xhr.onerror = () => reject(`An error occured: status ${xhr.status}, reason: ${xhr.statusText}`);
             xhr.send();
 // since result is array of json objects
-            // todo: add catch() clause
-        }).then(resolve => resolve.forEach(item => appendProductJoinProductImageShowTableRow(table, item)))
-            .then(() => // after table row appended or error text displayed, move the form field to the bottom position (arg false)
-                form.scrollIntoView(false));
+        }).then(value => value.forEach(item => appendProductJoinProductImageShowTableRow(table, item)))
+            .then(() => // after table row appended, move the form field to the bottom position (arg false)
+                form.scrollIntoView(false))
+            .catch(reason => {
+                errorText.innerHTML = `An error occured: status ${reason.status}, reason: ${reason.statusText}`;
+                errorText.style.display = 'block';
+                form.scrollIntoView(false);
+            });
     }
 // ------------------------------------------------------------------------------------------------------------
 
@@ -307,19 +300,37 @@ $(function () {
             let tbody = table.children[1];
             let tr = document.createElement('tr'),
             img = document.createElement('img');
-            // create array with obtainedData properties names to convenient adding table data
+// create array with obtainedData properties names to convenient adding table data
             let properties = ['productId', 'productName', 'producerId', 'productImageId', 'productImageName'];
             for (let i = 0; i < properties.length; i++) {
                 let td = document.createElement('td');
                 td.innerHTML = obtainedData[properties[i]];
                 tr.append(td);
             }
-            // get productImage
-            console.log(obtainedData['productImageData']);
-            img.src = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['productImageData'];
-            img.alt = obtainedData.fileName;
+// get productImage
+//             console.log(obtainedData['productImageData']);
+            let imgSrc = "data:" + obtainedData['fileType'] + ";base64," + obtainedData['productImageData'];
+            img.src = imgSrc;
+                img.alt = obtainedData.fileName;
             img.classList.add('img-table-cell');
+            img.style.cursor = 'pointer';
              let imgTd = document.createElement('td');
+// get modal window on image click
+             img.onclick = (event) => {
+                 // stop bubbling to prevent doOnclicks() window.onclick = (event) => MODAL.style.display = 'none';
+                 event.stopPropagation();
+                 // MODAL.classList.toggle('active');
+                MODAL.style.display = 'flex';
+                 let modalImage = document.querySelector('.modal-image');
+                 modalImage.alt = obtainedData['productImageName'];
+// set preview image src to modal-image src
+                 modalImage.src = imgSrc;
+// after loading, set full-sized image src to modal-image src
+ // get ProductImage instance with service method findById()
+//                 getModalImageFullSize(obtainedData['productImageId'])
+//                     .then(resolve => imgSrc = "data:" + resolve['fileType'] + ";base64," + resolve['data']);
+             };
+
              imgTd.append(img);
              tr.append(imgTd);
             let hideBtn = getHideButton();
@@ -335,7 +346,7 @@ $(function () {
      */
     function getHideButton() {
         let hideBtn = document.createElement('input');
-        hideBtn.type = 'submit';
+        hideBtn.type = 'button';
         hideBtn.value = 'hide';
         // hideBtn.classList.add('hide-product-img-row');
         hideBtn.onclick = (event) => {
@@ -360,7 +371,7 @@ $(function () {
             (event) => {
                 event.preventDefault();
                 let findImageByNameInput = document.querySelector('#find-image-by-name-input');
-                // showProductJoinProductImageByNamePart(findImageByNameInput.value);
+                // showProductImageByNamePart(findImageByNameInput.value);
                 findImageByNameInput.value = '';
             };
 // find-product-form submit:
@@ -374,6 +385,18 @@ $(function () {
     }
 // ------------------------------------------------------------------------------------------------------------
 
+function doOnclicks() {
+// window onclick behavior
+    window.onclick = (event) => MODAL.style.display = 'none';
+// button 'Hide results' in the "find-image-by-name-form" onclick behavior
+    document.querySelector('#hide-find-image-results').onclick = (event) =>
+        document.querySelector('#show-product-images-table>tbody').innerHTML = '';
+// button 'Hide results' in the "find-product-form" onclick behavior
+    document.querySelector('#hide-find-product-results').onclick = (event) =>
+        document.querySelector('#show-product-join-images-table>tbody').innerHTML = '';
+}
+// ------------------------------------------------------------------------------------------------------------
+
     function initializePage() {
         testIt();
         uploadImage('singleFileUploadSubmit', 'singleFileUploadInput',
@@ -381,6 +404,7 @@ $(function () {
         createProductImageShowTable('find-image-container', 'show-product-images-table');
         createProductJoinProductImageShowTable('find-product-form', 'show-product-join-images-table');
         doSubmits();
+        doOnclicks();
     }
 // ------------------------------------------------------------------------------------------------------------
 

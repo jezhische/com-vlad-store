@@ -35,6 +35,11 @@ public class ProductImageServiceImpl implements ProductImageService {
     public ProductImage saveFile(MultipartFile file) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileType = file.getContentType();
+// TODO: это костыль, поскольку иначе тип файла пропишется в бд как, например, image/jpeg. В этом случае, когда я
+//  пользуюсь методом ControllerUtils.scaleImageFromByteArray() для создания превью, стрый класс ImageIO не может
+//  правильно определить тип файла
+        if(fileType != null && fileType.substring(0, 6).matches("image/")) fileType = fileType.substring(6);
 
         try {
             // Check if the file's name contains invalid characters
@@ -43,7 +48,7 @@ public class ProductImageServiceImpl implements ProductImageService {
             }
 //            System.out.println("********************************************************************* + " +
 //                    "ProductImage saveFile(MultipartFile file): file.getContentType() = " + file.getContentType());
-            ProductImage image = new ProductImage(fileName, file.getContentType(), file.getBytes());
+            ProductImage image = new ProductImage(fileName, fileType /*file.getContentType()*/, file.getBytes());
             return repository.saveAndFlush(image);
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
