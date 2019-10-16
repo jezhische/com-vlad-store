@@ -3,7 +3,9 @@ $(function () {
 // ==================================================================================
 
     const MODAL = document.querySelector('.modal');
-    const PRODUCT_JOIN_PRODUCT_IMAGES_URL = 'product-images-uploads/product-join-product-images';
+    const URL_BASE = 'product-images-uploads';
+    const IMAGE_BY_ID_URL = '/product-images';
+    const PRODUCT_JOIN_PRODUCT_IMAGES_URL = '/product-join-product-images';
 // ==================================================================================
 
 // HTML PAGE "product-images-uploads.html"
@@ -91,6 +93,17 @@ $(function () {
 
 // ------------------------------------------------------------------------------------------------------------
 
+    async function getProductImageById(imgId, errorTxtElement) {
+        let response = await fetch(`${URL_BASE}${IMAGE_BY_ID_URL}/${imgId}`, {method: 'GET'});
+        if(response.ok) return await response.json();
+        else {
+            errorTxtElement.innerHTML = `Some error occured: ${response.status}: ${response.statusText}`;
+            errorTxtElement.style.display = 'block';
+            return null;
+        }
+    }
+// ------------------------------------------------------------------------------------------------------------
+
     /**
      * render table with results of ajax request of appropriate ProductImage instance
      * @param imgId - id of the ProductImage instance
@@ -98,7 +111,7 @@ $(function () {
      * @param imgDataTableId - id of the image data table block
      * @param formId - id of the find-image form
      */
-    function showProductImageById(imgId,
+    async function showProductImageById(imgId,
                                   errorTxtId = 'image-id-number-parse-error',
                                   imgDataTableId = 'show-product-images-table',
                                   formId = 'find-image-by-id-form') {
@@ -107,7 +120,7 @@ $(function () {
         imgId = Number.parseInt(imgId, 10);
         // parseInt() returns number or NaN to be coerced to boolean true or false with unambiguous way:
         if (!imgId) {
-            numberParseErrorTxt.innerHTML = 'Please type number id.  ';
+            numberParseErrorTxt.innerHTML = 'Please type number id.';
             numberParseErrorTxt.style.display = 'block';
 // after error text appeared, move the form field to the bottom position (arg false)
             form.scrollIntoView(false);
@@ -118,31 +131,10 @@ $(function () {
         // create table with headers row:
         let table = document.querySelector('#' + imgDataTableId);
         // send request:
-        $.ajax({
-            type: 'GET',
-            url: `product-images-uploads/product-images/${imgId}`,
-            dataType: 'json',
-            success: function (obtainedData, status, jqXHR) {
-                // append table row with image and image details by the following function:
-                if (jqXHR.status >= 200 && jqXHR.status < 300) appendProductImageShowTableRow(table, obtainedData);
-// FIXME: why else clause do not work?
-                else if (jqXHR.status === 404) {
-                    numberParseErrorTxt.innerHTML += '404: image not found';
-                    numberParseErrorTxt.style.display = 'block';
-                } else if(jqXHR.status >= 500) {
-                    numberParseErrorTxt.innerHTML += `Server Error occured: ${jqXHR.status}: ${jqXHR.statusText}`;
-                    numberParseErrorTxt.style.display = 'block';
-                } else {
-                    numberParseErrorTxt.innerHTML += `Error occured: ${jqXHR.status}: ${jqXHR.statusText}`;
-                    numberParseErrorTxt.style.display = 'block';
-                }
-// after table row appended or error text displayed, move the form field to the bottom position (arg false)
-                form.scrollIntoView(false);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                numberParseErrorTxt.innerHTML += jqXHR.responseText;
-            }
-        });
+// TODO: create getPreview method and add preview here, full-sized one only on click
+        let obtainedData = await getProductImageById(imgId, numberParseErrorTxt);
+        if (obtainedData) appendProductImageShowTableRow(table, obtainedData);
+        form.scrollIntoView(false);
     }
 // ---------------------------------------------------------------------------------------------------------
 
@@ -224,9 +216,9 @@ $(function () {
     // ---------------------------------------------------------------------------------------------------------
 
     function showProductJoinProductImageByNamePart(productName, dataTableId = 'show-product-join-images-table',
-                                                   formId = 'find-product-form') {
+                                                   formId = 'find-product-form', errorTxtId = 'product-join-image-error') {
         let form = document.querySelector('#' + formId);
-        let errorText = document.querySelector('#product-join-image-error');
+        let errorText = document.querySelector(`#${errorTxtId}`);
         errorText.style.display = 'none';
         // let url = new URL('http://localhost:8081/store/product-images-uploads/product-join-product-images');
         // if (productName) url.searchParams.set('name-part', productName);
@@ -237,7 +229,7 @@ $(function () {
             form.scrollIntoView(false);
             return;
         } else {
-            url = `${PRODUCT_JOIN_PRODUCT_IMAGES_URL}?name-part=${productName.trim()}`;
+            url = `${URL_BASE}${PRODUCT_JOIN_PRODUCT_IMAGES_URL}?name-part=${productName.trim()}`;
         }
         let table = document.querySelector('#' + dataTableId);
         new Promise(function (resolve, reject) {
@@ -290,13 +282,14 @@ $(function () {
         return table;
     }
     // ------------------------------------------------------------------------------------------------------------
-        /**
-         * display results of request for ProductImage data
-         * @param table - table to display results
-         * @param obtainedData - an object containing ProductImage data (id, fileName, fileType and image data byte array)
-         * @param formId - id of the searching form
-         */
-        function appendProductJoinProductImageShowTableRow(table, obtainedData, formId = '#find-image-by-id-form') {
+    /**
+     * display results of request for ProductImage data
+     * @param table - table to display results
+     * @param obtainedData - an object containing ProductImage data (id, fileName, fileType and image data byte array)
+     * @param errorTxtId
+     */
+        async function appendProductJoinProductImageShowTableRow(table, obtainedData,
+                                                                 errorTxtId = 'product-join-image-error') {
             let tbody = table.children[1];
             let tr = document.createElement('tr'),
             img = document.createElement('img');
@@ -316,7 +309,7 @@ $(function () {
             img.style.cursor = 'pointer';
              let imgTd = document.createElement('td');
 // get modal window on image click
-             img.onclick = (event) => {
+             img.onclick = async (event) => {
                  // stop bubbling to prevent doOnclicks() window.onclick = (event) => MODAL.style.display = 'none';
                  event.stopPropagation();
                  // MODAL.classList.toggle('active');
@@ -326,6 +319,9 @@ $(function () {
 // set preview image src to modal-image src
                  modalImage.src = imgSrc;
 // after loading, set full-sized image src to modal-image src
+                 let fullImageJson = await getProductImageById(obtainedData['productImageId'],
+                     document.querySelector(`#${errorTxtId}`));
+                 modalImage.src = `data:${fullImageJson['fileType']};base64,${fullImageJson['data']}`;
  // get ProductImage instance with service method findById()
 //                 getModalImageFullSize(obtainedData['productImageId'])
 //                     .then(resolve => imgSrc = "data:" + resolve['fileType'] + ";base64," + resolve['data']);
