@@ -15,4 +15,4 @@ At the moment, the goal has not been achieved.</p>
  <hr>
  <p>Admin page appearance at the moment</p>
  <img src="src\main\resources\static\images\admin_page.jpeg" 
- alt="admin_page" width="70%"/>
+ alt="admin_page" width="85%"/>
