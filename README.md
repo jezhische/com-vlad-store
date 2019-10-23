@@ -1,12 +1,13 @@
 <p><i>The application is for training purposes only.</i></p> 
 <p>Status: not complete.</p> 
-<p>The main purpose of creating the application is to get the practice 
+<p>The main purpose of creating the application is to get practice 
 of building relationships between entities. Another goal is to learn 
 how to work with images as byte arrays: uploading, saving in db, 
-obtaining from db and rendering on HTML page. Finally, another goal 
-is training in teamwork. It was assumed that I would provide the server 
-part as well as HTML and JavaScript in a minimal amount, and then 
-my friend would rewrite the frontend part using React.js (also for training purposes). 
+obtaining from db, scaling, sending to client and rendering on HTML page. 
+Finally, there was a goal of training in teamwork. It was assumed that 
+I would provide the server part as well as HTML and JavaScript in a 
+minimal amount, and then my friend would rewrite the frontend part 
+using React.js (also for training purposes). 
 At the moment, the goal has not been achieved.</p>
  <p>Technologies used: JDK 8 / JavaScript ES6 / Spring Boot 2.0.4.RELEASE / Spring Web MVC 
  / Spring Security / Spring Data JPA 
