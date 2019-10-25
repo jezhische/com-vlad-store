@@ -1,6 +1,7 @@
 <p><i>The application is for training purposes only.</i></p> 
-<p>Status: not complete.</p> 
-<p>The main purpose of creating the application is to get practice 
+<p>Status: incomplete.</p> 
+<p>A simple online store using the REST design principles. 
+The main purpose of creating the application is to get practice 
 of building relationships between entities. Another goal is to learn 
 how to work with images as byte arrays: uploading, saving in db, 
 obtaining from db, scaling, sending to client and rendering on HTML page. 
@@ -16,4 +17,4 @@ At the moment, the goal has not been achieved.</p>
  <hr>
  <p>Admin page appearance at the moment</p>
  <img src="src\main\resources\static\images\admin_page.jpeg" 
- alt="admin_page" width="85%"/>
+ alt="admin_page" width="90%"/>
