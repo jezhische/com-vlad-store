@@ -19,5 +19,8 @@ At the moment, the goal has not been achieved.</p>
  <img src="src\main\resources\static\images\admin_page.jpeg" 
  alt="admin_page" width="90%"/> 
 <p>Entity relationship diagram at the moment</p>
- <img src="src\main\resources\static\images\model_package_ERD_2019_10_29.png" 
+ <img src="src\main\resources\static\images\model_package_ERD_2019_10_29.jpg" 
+ alt="model_package_ERD_2019_10_29" width="90%"/>
+<p>pgAdmin db view at the moment</p>
+ <img src="src\main\resources\static\images\store_pgadmin_2019_10_29.jpeg" 
  alt="model_package_ERD_2019_10_29" width="90%"/>
