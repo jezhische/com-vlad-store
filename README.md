@@ -17,4 +17,7 @@ At the moment, the goal has not been achieved.</p>
  <hr>
  <p>Admin page appearance at the moment</p>
  <img src="src\main\resources\static\images\admin_page.jpeg" 
- alt="admin_page" width="90%"/>
+ alt="admin_page" width="90%"/> 
+<p>Entity relationship diagram at the moment</p>
+ <img src="src\main\resources\static\images\model_package_ERD_2019_10_29.png" 
+ alt="model_package_ERD_2019_10_29" width="90%"/>
